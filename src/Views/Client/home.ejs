@@ -1,0 +1,118 @@
+<section id="home" class="full-height">
+    <div>
+        <h1 class="left-to-right show-on-scroll">Chào mừng bạn đến với sosichat.tech</h1>
+        <p class="left-to-right show-on-scroll">
+            Nhanh tay đăng ký hoặc đăng nhập để trò chuyện với mọi người nhé
+        </p>
+    </div> 
+</section>
+
+<section id="about" class="full-height">
+    <div class="box show-on-scroll left-to-right">
+        <h2>Đăng nhập</h2>
+        <form style="padding: 20px; height: 60vh;">
+            <div class="form-control">
+              <input type="text" id="username" placeholder="Username" />
+              <span></span>
+              <small></small>
+            </div>
+            <div class="form-control">
+              <input type="email" id="email" placeholder="Email" />
+              <span></span>
+              <small></small>
+            </div>
+            <div class="form-control">
+              <input type="password" id="password" placeholder="Password" />
+              <span></span>
+              <small></small>
+            </div>
+            <input type="submit" value="Login" />
+          </form>
+    </div>
+    <div class="box show-on-scroll right-to-left">
+        <h2>Đăng ký nhanh</h2>
+        <form style="padding: 20px; height: 60vh;">
+            <div class="form-control">
+              <input type="text" id="username" placeholder="Username" />
+              <span></span>
+              <small></small>
+            </div>
+            <div class="form-control">
+              <input type="email" id="email" placeholder="Email" />
+              <span></span>
+              <small></small>
+            </div>
+            <div class="form-control">
+              <input type="password" id="password" placeholder="Password" />
+              <span></span>
+              <small></small>
+            </div>
+            <div class="form-control">
+              <input
+                type="password"
+                id="password2"
+                placeholder="Confirm password"
+              />
+              <span></span>
+              <small></small>
+            </div>
+            <input type="submit" value="Login" />
+          </form>
+    </div>
+</section>
+
+<div id="team" class="full-height">
+    <div class="person show-on-scroll zoom">
+        <h3>Person 1</h3>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. In
+            repudiandae sequi, ad cum aperiam odit eius earum molestiae voluptatem
+        </p>
+    </div>
+    <div class="person show-on-scroll zoom">
+        <h3>Person 2</h3>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. In
+            repudiandae sequi, ad cum aperiam odit eius earum molestiae voluptatem
+        </p>
+    </div>
+    <div class="person show-on-scroll zoom">
+        <h3>Person 3</h3>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. In
+            repudiandae sequi, ad cum aperiam odit eius earum molestiae voluptatem
+        </p>
+    </div>
+</div>
+
+<script>
+    let elToShow = document.querySelectorAll('.show-on-scroll')
+
+    let isElInViewPort = (el) => {
+        let rect = el.getBoundingClientRect()
+        // some browsers support innerHeight, others support documentElement.clientHeight
+        let viewHeight = window.innerHeight || document.documentElement.clientHeight
+
+        return (
+            (rect.top <= 0 && rect.bottom >= 0) ||
+            (rect.bottom >= viewHeight && rect.top <= viewHeight) ||
+            (rect.top >= 0 && rect.bottom <= viewHeight)
+        )
+    }
+    
+    function loop() {
+        elToShow.forEach((item) => {
+            if (isElInViewPort(item)) {
+                item.classList.add('start')
+            } else {
+                item.classList.remove('start')
+            }
+        })
+    }
+
+    window.onscroll = loop
+
+    loop()
+</script>
+
+<script src="/js/home.js"></script>
