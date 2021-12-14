@@ -55,36 +55,38 @@ exports.chat = async (req,res) => {
     }
 
     // get data user from cookie
-    const data_user = jwt.verify(user_cookie, 'sosichat')
-    let error = []
+    else{
+        const data_user = jwt.verify(user_cookie, 'sosichat')
+        let error = []
 
-    User.findById(data_user.user_id)
-        .then(user => {
-            if(!user) res.redirect('login')
-            else{
-                Room.findById(room_id)
-                    .then(room => {
-                        res.render('client/chat', {
-                            title : room.title,
-                            message : room.message,
-                            user : {
-                                user_id : user._id,
-                                username : user.username
-                            }
+        User.findById(data_user.user_id)
+            .then(user => {
+                if(!user) res.redirect('login')
+                else{
+                    Room.findById(room_id)
+                        .then(room => {
+                            res.render('client/chat', {
+                                title : room.title,
+                                message : room.message,
+                                user : {
+                                    user_id : user._id,
+                                    username : user.username
+                                }
+                            })
                         })
-                    })
-                    .catch(err => {
-                        console.log(err.message)
-                        error.push({'error_getdataroom' : err.message})
-                        res.redirect('/')
-                    })
-            }
-        })
-        .catch(err => {
-            console.log(err.message)
-            error.push('error_joinRoom', err.message)
-            res.render('client/login', {title: 'Chào mừng bạn đến trang trò chuyện online của Sosi' , layout : path.join(__dirname + '../../../../views/layouts/login-layout'),error})
-        })
+                        .catch(err => {
+                            console.log(err.message)
+                            error.push({'error_getdataroom' : err.message})
+                            res.redirect('/')
+                        })
+                }
+            })
+            .catch(err => {
+                console.log(err.message)
+                error.push('error_joinRoom', err.message)
+                res.render('client/login', {title: 'Chào mừng bạn đến trang trò chuyện online của Sosi' , layout : path.join(__dirname + '../../../../views/layouts/login-layout'),error})
+            })
+    }
 }
 
 
