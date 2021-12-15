@@ -31,20 +31,12 @@
         <div>
             <div class="layout-chat-room">
                 <div class="infor-user-search">
-                    <p>hix</p>
+                    <p>infor user</p>
                 </div>
 
                 <div class="list-room">
                     <div class="infor-room">
-                        <p>start</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
+                        <p>List room</p>
                     </div>
                 </div>
             </div>
@@ -68,7 +60,7 @@
                                 ><%- message[i].user_name %> - <%-
                                 message[i].time %></small
                             >
-                            <p><%- message[i].msg %></p>
+                            <p><%- message[i].content %></p>
                         </div>
                     </div>
                     <% } else { %>
@@ -78,7 +70,7 @@
                                 ><%- message[i].user_name %> - <%-
                                 message[i].time %></small
                             >
-                            <p><%- message[i].msg %></p>
+                            <p><%- message[i].content %></p>
                         </div>
                     </div>
                     <% } %> <% } %>
@@ -114,7 +106,7 @@
             var socket = io();
             var url = window.location.pathname.split('/');
             var room_id = url[url.length - 1];
-            console.log(room_id);
+            // console.log(room_id);
 
             socket.emit('joinRoom', room_id);
 
@@ -141,6 +133,8 @@
             socket.on(
                 'message',
                 ({ user_id_s, user_name_s, msg_s, time_s }) => {
+                    // console.log(user_name_s);
+
                     const div = document.createElement('div');
                     div.classList.add('form-message');
                     if (user_id == user_id_s)

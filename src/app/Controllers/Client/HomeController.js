@@ -2,6 +2,7 @@ const path = require('path')
 const jwt = require('jsonwebtoken')
 const User = require('../../Models/User')
 const Room = require('../../Models/Room')
+const Message = require('../../Models/Message')
 
 function checkLogin(user){
     
@@ -65,14 +66,33 @@ exports.chat = async (req,res) => {
                 else{
                     Room.findById(room_id)
                         .then(room => {
-                            res.render('client/chat', {
-                                title : room.title,
-                                message : room.message,
-                                user : {
-                                    user_id : user._id,
-                                    username : user.username
-                                }
-                            })
+                            const checkUser = room.list_user.find(user => user.user_id === data_user.user_id)
+
+                            if(!checkUser){
+                                res.redirect('/')
+                            }
+                            else
+                            {
+                                Message.find({room_id : room._id})
+                                    .then(message => {
+                                        
+                                        // console.log(message)
+
+                                        res.render('client/chat', {
+                                            title : room.title,
+                                            message : message,
+                                            user : {
+                                                user_id : user._id,
+                                                username : user.username
+                                            }
+                                        })
+                                    })
+                                    .catch(err => {
+                                        console.log(err.message)
+                                        error.push({'error_getmessage' : err.message})
+                                        res.redirect('/')
+                                    })
+                            }
                         })
                         .catch(err => {
                             console.log(err.message)
