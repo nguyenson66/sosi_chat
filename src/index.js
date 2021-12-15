@@ -6,7 +6,7 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const path = require('path')
 const routes = require('./routes')
-const db = require('./config/connectDB')
+const db = require('./Config/connectDB')
 const moment = require('moment')
 
 /// schema db ////
