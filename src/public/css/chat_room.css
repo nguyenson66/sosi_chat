@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@700&family=Dancing+Script&family=Shalimar&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.background {
+    background-color: pink;
+    width: 100%;
+}
+
+.layout-chat-room {
+    width: 25%;
+    float: left;
+    height: 100vh;
+    background-color: aqua;
+    border-right: 1px solid #a3a38f;
+}
+
+.infor-user-search {
+    background-color: white;
+    height: 20%;
+}
+
+.list-room {
+    height: 80%;
+}
+
+.infor-room {
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.room.btn {
+    height: 70px;
+    width: 100%;
+    border-top: 1px solid #a3a38f;
+    border-bottom: 1px solid #a3a38f;
+    background-color: white;
+    text-align: left;
+}
+
+.room.btn img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid pink;
+}
+
+/* /////////////////////// */
+
+.layout-message {
+    width: 75%;
+    float: left;
+    height: 100vh;
+}
+
+#image-cupid {
+    width: 25%;
+    height: auto;
+    top: 10%;
+    left: 50%;
+    position: absolute;
+}
+
+/* /////     information user and search      ///// */
+
+.infor-user {
+    padding: 10px;
+}
+
+.infor-user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid yellowgreen;
+}
+
+.infor-user span {
+    font-size: 20px;
+    display: inline-block;
+}
+
+/* ///////////////////// */
+
+.infor-person {
+    background-color: white;
+    padding: 15px;
+    border-bottom: 1px solid #a3a38f;
+    height: 12%;
+    margin: auto;
+}
+
+.infor-person h5 {
+    display: inline;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.image-user {
+    border-radius: 50%;
+    border: 2px solid orange;
+    height: 50px;
+    width: 50px;
+    margin: auto;
+}
+
+/* /////////////////////// */
+
+.message {
+    height: 80%;
+    background-color: greenyellow;
+    overflow-y: scroll;
+}
+
+.send-message {
+    height: 8%;
+    background-color: orange;
+}
+
+.form-message {
+    margin-left: 10px;
+}
+
+.format-form-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+}
+
+.content-message {
+    width: max-content;
+    max-width: 45%;
+    text-align: left;
+}
+
+.content-message small {
+    margin-left: 10px;
+}
+
+.content-message p {
+    background-color: pink;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* ////////////////////////////// */
+
+#chat-form input {
+    height: 40px;
+    width: 85%;
+    margin: 5px 0 0 5px;
+    padding-left: 10px;
+    border-radius: 5px;
+}
+
+#chat-form button {
+    background-color: aqua;
+    border-radius: 5px;
+    padding: 2px 5px 2px 5px;
+}
+
+/* //////////// home ///////////////// */
+
+.introduce-home {
+    margin-top: 42%;
+    margin-left: 15%;
+}
+
+.introduce-home h2 {
+    font-family: 'Shalimar', cursive;
+    font-size: 60px;
+}
