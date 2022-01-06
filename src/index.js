@@ -157,6 +157,6 @@ io.on('connection', function(socket) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-server.listen(3000 , () => {
+server.listen(80 , () => {
     console.log('server is running')
 })
