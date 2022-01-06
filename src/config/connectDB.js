@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 async function connect () {
     try {
-        await mongoose.connect('mongodb+srv://sositech:soicondibui@cluster0.crtjk.mongodb.net/sosichat?retryWrites=true&w=majority', {
+        await mongoose.connect(process.env.DB_CLOUD, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })
@@ -13,6 +13,3 @@ async function connect () {
 }
 
 module.exports = {connect}
-
-// 'mongodb://localhost:27017/sosichat'
-// 'mongodb+srv://sositech:soicondibui@cluster0.crtjk.mongodb.net/sosichat?retryWrites=true&w=majority'

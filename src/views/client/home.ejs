@@ -43,6 +43,57 @@
             </div>
         </div>
 
+        <% if(complete_user) { %>
+            <div class="form-complete-information-user" id="form-complete">
+                <form method="post" action="/complete-user" class="form-container">
+                    <h5>
+                        Vui lòng hoàn thiện hồ sơ để sử dụng chức năng trang web
+                    </h5>
+    
+                    <label for="email"><b>Giới tính : </b></label>
+                    <select name="sex">
+                        <option value="0">Nam</option>
+                        <option value="1">Nữ</option>
+                        <option value="2">Giới tính thứ 3</option>
+                    </select>
+                    <br />
+    
+                    <label for="psw"><b>Ngày sinh : </b></label>
+                    <input
+                        type="date"
+                        placeholder="Enter Password"
+                        name="age"
+                        required
+                    />
+    
+                    <br />
+                    <label for="psw"
+                        ><b>Đối tượng ghép đôi (Có thể lựa chọn nhiều) : </b></label
+                    >
+                    <br />
+                    <label class="checkbox-inline">
+                        <input name="option" type="checkbox" value="0" /> Nam
+                    </label>
+                    <label class="checkbox-inline">
+                        <input name="option" type="checkbox" value="1" /> Nữ
+                    </label>
+                    <label class="checkbox-inline">
+                        <input name="option" type="checkbox" value="2" /> Giới tính thứ 3
+                    </label>
+    
+                    <br>
+    
+                    <input
+                        class="btn btn-success"
+                        style="margin: 20px 0 0 45%"
+                        type="submit"
+                        value="OK"
+                    >
+                    </input>
+                </form>
+            </div>
+        <% } %>
+
         <form name="form-redirect" method="GET"></form>
 
         <script>

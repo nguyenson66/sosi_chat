@@ -9,5 +9,7 @@ router.get('', HomeController.checkLogin , HomeController.home)
 
 
 router.post('/login', HomeController.loginPOST)
+router.post('/register', HomeController.registerPOST)
+router.post('/complete-user', HomeController.checkLogin, HomeController.CompleteUser)
 
 module.exports = router

@@ -8,6 +8,7 @@ const path = require('path')
 const routes = require('./routes')
 const db = require('./config/connectDB')
 const moment = require('moment')
+const dotenv = require('dotenv').config()
 
 /// schema db ////
 const Room = require('./app/Models/Room')

@@ -172,3 +172,30 @@
     font-family: 'Shalimar', cursive;
     font-size: 60px;
 }
+
+/* ////// complete information user //////////// */
+.form-complete-information-user {
+    display: block;
+    padding: 10px;
+    background-color: #ece2b8;
+    position: fixed;
+    top: 20%;
+    left: 30%;
+    border: 2px solid #f1f1f1;
+    border-radius: 10px;
+    z-index: 9;
+}
+
+.form-container {
+    padding: 10px;
+    display: block;
+}
+
+.form-container h5 {
+    margin-bottom: 30px;
+    color: yellowgreen;
+}
+
+.form-container button {
+    margin-left: 40%;
+}
