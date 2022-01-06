@@ -1,0 +1,25 @@
+<div class="layout-chat-room">
+    <div class="infor-user-search">
+        <div class="infor-user">
+            <img src="<%- user.avatar %>" />
+
+            <span><%- user.user_name %></span>
+        </div>
+
+        <button id="new-stranger-room">Nhắn tin với người lạ</button>
+        <button id="new-group">Tạo nhóm trò chuyện</button>
+    </div>
+
+    <div class="list-room">
+        <div class="infor-room">
+            <% for(let i=0; i < list_room.length ; i++) { %>
+            <a class="room btn" href="/c/<%- list_room[i]._id %>">
+                <img src="/images/<%- list_room[i].avatar %>" />
+                <p style="display: inline; margin-left: 15px">
+                    <%- list_room[i].title %>
+                </p>
+            </a>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@700&family=Dancing+Script&family=Shalimar&display=swap');
 * {
     margin: 0;
     padding: 0;
@@ -30,6 +31,22 @@
     height: 100%;
 }
 
+.room.btn {
+    height: 70px;
+    width: 100%;
+    border-top: 1px solid #a3a38f;
+    border-bottom: 1px solid #a3a38f;
+    background-color: white;
+    text-align: left;
+}
+
+.room.btn img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid pink;
+}
+
 /* /////////////////////// */
 
 .layout-message {
@@ -38,7 +55,33 @@
     height: 100vh;
 }
 
-/* //////////////////// */
+#image-cupid {
+    width: 25%;
+    height: auto;
+    top: 10%;
+    left: 50%;
+    position: absolute;
+}
+
+/* /////     information user and search      ///// */
+
+.infor-user {
+    padding: 10px;
+}
+
+.infor-user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid yellowgreen;
+}
+
+.infor-user span {
+    font-size: 20px;
+    display: inline-block;
+}
+
+/* ///////////////////// */
 
 .infor-person {
     background-color: white;
@@ -116,4 +159,16 @@
     background-color: aqua;
     border-radius: 5px;
     padding: 2px 5px 2px 5px;
+}
+
+/* //////////// home ///////////////// */
+
+.introduce-home {
+    margin-top: 42%;
+    margin-left: 15%;
+}
+
+.introduce-home h2 {
+    font-family: 'Shalimar', cursive;
+    font-size: 60px;
 }

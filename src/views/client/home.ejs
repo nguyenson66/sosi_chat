@@ -29,116 +29,70 @@
     </head>
     <body class="background">
         <div>
-            <div class="layout-chat-room">
-                <div class="infor-user-search">
-                    <p>hix</p>
-                </div>
-
-                <div class="list-room">
-                    <div class="infor-room">
-                        <p>start</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                        <p>nguyen hong son dep trai</p>
-                    </div>
-                </div>
-            </div>
+            <%- include('infor-user-room') %>
 
             <div class="layout-message">
-                <div class="infor-person">
-                    <img
-                        src="https://i.pinimg.com/736x/23/e6/02/23e6029c5285471338418f1556811ce9.jpg"
-                        class="image-user"
-                    />
+                <img id="image-cupid" src="/images/cupid.png" />
 
-                    <h5>Nguyen Son</h5>
-                </div>
-
-                <div class="message">
-                    <div class="form-message format-form-right">
-                        <div class="content-message">
-                            <small>Nguyen son</small>
-                            <p>
-                                Nguyen hong son dz ne Nguyen hong son dz
-                                neNguyen hong son dz neNguyen hong son dz
-                                neNguyen hong son dz ne
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="form-message">
-                        <div class="content-message">
-                            <small>Nguyen son</small>
-                            <p>
-                                Nguyen hong son dz ne Nguyen hong son dz
-                                neNguyen hong son dz neNguyen hong son dz
-                                neNguyen hong son dz ne
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="form-message format-form-right">
-                        <div class="content-message">
-                            <small>Nguyen son</small>
-                            <p>
-                                Nguyen hong son dz ne Nguyen hong son dz
-                                neNguyen hong son dz neNguyen hong son dz
-                                neNguyen hong son dz ne
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="form-message format-form-right">
-                        <div class="content-message">
-                            <small>Nguyen son</small>
-                            <p>
-                                Nguyen hong son dz ne Nguyen hong son dz
-                                neNguyen hong son dz neNguyen hong son dz
-                                neNguyen hong son dz ne
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="form-message format-form-right">
-                        <div class="content-message">
-                            <small>Nguyen son - 8:26 PM 13/12/2021</small>
-                            <p>
-                                Nguyen hong son dz ne Nguyen hong son dz
-                                neNguyen hong son dz neNguyen hong son dz
-                                neNguyen hong son dz ne
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="form-message format-form-right">
-                        <div class="content-message">
-                            <small>Nguyen son - 8:26 PM 13/12/2021</small>
-                            <p>:v</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="send-message">
-                    <div class="form-input-message">
-                        <form id="chat-form">
-                            <input
-                                id="msg"
-                                type="text"
-                                placeholder="Enter Message"
-                                required
-                                autocomplete="off"
-                                autofocus
-                            />
-                            <button>SEND</button>
-                        </form>
-                    </div>
+                <div class="introduce-home">
+                    <h2>Cảm ơn bạn đã tham gia sosichat.xyz</h2>
+                    <span>
+                        Chúc bạn có những phút giây vui vẻ với mọi người
+                    </span>
                 </div>
             </div>
         </div>
+
+        <form name="form-redirect" method="GET"></form>
+
+        <script>
+            const image_cupid = document.getElementById('image-cupid');
+            const form_redirect = document.forms['form-redirect'];
+
+            ////// socket ///////
+            let socket = io();
+
+            /////////////////////
+            /// image up down
+            let imageUpDown = 10,
+                f = 0.2;
+            setTimeout(upDown, 50);
+
+            function upDown() {
+                image_cupid.style.top = `${imageUpDown}%`;
+                if (imageUpDown <= 15 && imageUpDown >= 5) imageUpDown += f;
+                if (Math.abs(5 - imageUpDown) < 0.2) f = 0.2;
+                if (Math.abs(15 - imageUpDown) < 0.2) f = -0.2;
+                setTimeout(upDown, 50);
+            }
+
+            $('#new-stranger-room').click(() => {
+                alert(
+                    'Đang tìm đối tượng thích hợp cho bạn vui lòng đợi trong giây lát'
+                );
+
+                socket.emit('new-stranger-room', '<%- user._id %>');
+
+                // listen event successfull pairing
+                socket.on('successfull-pairing', (room_id) => {
+                    form_redirect.action = '/c/' + room_id;
+                    form_redirect.submit();
+                });
+            });
+
+            $('#new-group').click(() => {
+                socket.emit('new-group-chat', '<%- user._id %>');
+                alert(
+                    `Tạo phòng trò chuyện thành công bấm 'ok' để chuyển hướng`
+                );
+
+                socket.on('redirect-group-chat', (room_id) => {
+                    form_redirect.action = '/c/' + room_id;
+                    form_redirect.submit();
+                });
+            });
+        </script>
+
+        <!-- <script src="/js/option.js"></script> -->
     </body>
 </html>

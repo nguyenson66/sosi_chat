@@ -4,40 +4,46 @@ const User = require('../../Models/User')
 const Room = require('../../Models/Room')
 const Message = require('../../Models/Message')
 
-function checkLogin(user){
-    
-}
-
-
-//[GET] /
-exports.home = async (req,res) => {
+exports.checkLogin = (req,res,next) => {
     const user_cookie = req.cookies.user_cookie
     if(!user_cookie){
         res.redirect('/login')
     }
-
-    // get data user from cookie
     else{
         const data_user = jwt.verify(user_cookie, 'sosichat')
-        let error = []
 
         User.findById(data_user.user_id)
             .then(user => {
                 if(!user) res.redirect('login')
                 else{
-                    res.render('client/home',{
-                        title : `Chào mừng ${user.username} đến với trang web`
-                    })
-
-
+                    req.body.user = user
+                    next()
                 }
             })
             .catch(err => {
                 console.log(err.message)
-                error.push('error_joinRoom', err.message)
-                res.render('client/login', {title: 'Chào mừng bạn đến trang trò chuyện online của Sosi' , layout : path.join(__dirname + '../../../../views/layouts/login-layout'),error})
+                res.redirect('/login')
             })
     }
+}
+
+//[GET] /
+exports.home = (req,res) => {
+    const user = req.body.user
+
+    Room.find({'list_user' : user._id }).then(function(room) {
+
+        res.render('client/home',{
+            user : {
+                '_id' : user._id,
+                'user_name' : user.username,
+                'avatar' : user.avatar,
+            },
+            title : 'Sosichat.tech',
+            list_room : room,
+        })
+
+    }).catch(err => console.log(err.message))
 }
 
 //[GET] /login
@@ -47,66 +53,109 @@ exports.login = async (req,res) => {
     })
 }
 
+//[GET] /j/:id
+exports.joinRoom = async (req,res) => {
+    const user = req.body.user
+
+    const room_id = req.params.id
+    Room.findById(room_id)
+        .then(room => {
+            if(room.public_room){
+                
+                //check already exits in the group
+                if(!room.list_user.includes(user._id)){
+                    room.list_user.push(user._id)
+                    room.save();
+                }
+
+                // redirect room
+                res.redirect('/c/' + room_id)
+            }
+            else{
+                res.redirect('/')
+            }
+        })
+        .catch(err => {
+            console.log(err.message)
+
+            //render view 404
+            res.redirect('/')
+        })
+}
+
 //[GET] /c/:id
 exports.chat = async (req,res) => {
-    const user_cookie = req.cookies.user_cookie
     const room_id = req.params.id
-    if(!user_cookie){
-        res.redirect('/login')
-    }
+    const data_user = req.body.user
 
-    // get data user from cookie
-    else{
-        const data_user = jwt.verify(user_cookie, 'sosichat')
-        let error = []
+    Room.findById(room_id)
+        .then(async function(room) {
+            const checkUserInRoom = room.list_user.find(user => user == data_user._id)
 
-        User.findById(data_user.user_id)
-            .then(user => {
-                if(!user) res.redirect('login')
-                else{
-                    Room.findById(room_id)
-                        .then(room => {
-                            const checkUser = room.list_user.find(user => user.user_id === data_user.user_id)
+            if(!checkUserInRoom){
+                res.redirect('/')
+            }
+            else
+            {
+                let message, list_room
+                await Message.find({room_id : room._id})
+                    .then(msg => {
+                        
+                        message = msg
+                    })
+                    .catch(err => {
+                        console.log(err.message)
 
-                            if(!checkUser){
-                                res.redirect('/')
-                            }
-                            else
-                            {
-                                Message.find({room_id : room._id})
-                                    .then(message => {
-                                        
-                                        // console.log(message)
-
-                                        res.render('client/chat', {
-                                            title : room.title,
-                                            message : message,
-                                            user : {
-                                                user_id : user._id,
-                                                username : user.username
-                                            }
-                                        })
-                                    })
-                                    .catch(err => {
-                                        console.log(err.message)
-                                        error.push({'error_getmessage' : err.message})
-                                        res.redirect('/')
-                                    })
-                            }
-                        })
-                        .catch(err => {
-                            console.log(err.message)
-                            error.push({'error_getdataroom' : err.message})
-                            res.redirect('/')
-                        })
+                        /// render view 404
+                        res.redirect('/')
+                    })
+                
+                await Room.find({list_user : data_user._id})
+                    .then(room => {
+                        list_room = room
+                    })
+                    .catch(err => {
+                        console.log(err.message)
+                        
+                        /// render view 404
+                        res.redirect('/')
+                
+                
+                    })
+                
+                let title_room
+                if(room.public_room){
+                    title_room = room.title
+                }else{
+                    if(room.public_infor){
+                        const stranger_id = room.list_user.find(id => id != data_user._id)
+                        await User.findById(stranger_id)
+                            .then(data => title_room = data.username)
+                            .catch(err => console.log(err))
+                    }else{
+                        title_room = 'Người lạ'
+                    }
                 }
-            })
-            .catch(err => {
-                console.log(err.message)
-                error.push('error_joinRoom', err.message)
-                res.render('client/login', {title: 'Chào mừng bạn đến trang trò chuyện online của Sosi' , layout : path.join(__dirname + '../../../../views/layouts/login-layout'),error})
-            })
-    }
+
+
+                res.render('client/chat', {
+                    title : title_room,
+                    user : {
+                        '_id' : data_user._id,
+                        'user_name' : data_user.username,
+                        'avatar' : data_user.avatar,
+                    },
+                    list_room : list_room,
+                    message : message,
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err)
+
+            /// render view 404
+            res.redirect('/')
+        })
 }
 
 

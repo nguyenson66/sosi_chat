@@ -29,17 +29,7 @@
     </head>
     <body class="background">
         <div>
-            <div class="layout-chat-room">
-                <div class="infor-user-search">
-                    <p>infor user</p>
-                </div>
-
-                <div class="list-room">
-                    <div class="infor-room">
-                        <p>List room</p>
-                    </div>
-                </div>
-            </div>
+            <%- include('infor-user-room') %>
 
             <div class="layout-message">
                 <div class="infor-person">
@@ -48,28 +38,22 @@
                         class="image-user"
                     />
 
-                    <h5>Nguyen Son</h5>
+                    <h5><%- title %></h5>
                 </div>
 
                 <div class="message">
-                    <% for(let i = 0;i< message.length;i++) {%> <% if
-                    (user.user_id == message[i].user_id) { %>
+                    <% for(let i = 0;i< message.length;i++) {%> <% if (user._id
+                    == message[i].user_id) { %>
                     <div class="form-message format-form-right">
                         <div class="content-message">
-                            <small
-                                ><%- message[i].user_name %> - <%-
-                                message[i].time %></small
-                            >
+                            <small><%- message[i].user_name %></small>
                             <p><%- message[i].content %></p>
                         </div>
                     </div>
                     <% } else { %>
                     <div class="form-message">
                         <div class="content-message">
-                            <small
-                                ><%- message[i].user_name %> - <%-
-                                message[i].time %></small
-                            >
+                            <small><%- message[i].user_name %></small>
                             <p><%- message[i].content %></p>
                         </div>
                     </div>
@@ -100,8 +84,8 @@
             form_message.scrollTop = form_message.scrollHeight;
 
             //infor user
-            var user_id = '<%- user.user_id%>';
-            var user_name = '<%- user.username %>';
+            var user_id = '<%- user._id%>';
+            var user_name = '<%- user.user_name %>';
 
             var socket = io();
             var url = window.location.pathname.split('/');
@@ -130,33 +114,57 @@
                 e.target.elements.msg.value = '';
             });
 
-            socket.on(
-                'message',
-                ({ user_id_s, user_name_s, msg_s, time_s }) => {
-                    // console.log(user_name_s);
+            socket.on('message', ({ user_id_s, user_name_s, msg_s }) => {
+                // console.log(user_name_s);
 
-                    const div = document.createElement('div');
-                    div.classList.add('form-message');
-                    if (user_id == user_id_s)
-                        div.classList.add('format-form-right');
+                const div = document.createElement('div');
+                div.classList.add('form-message');
+                if (user_id == user_id_s)
+                    div.classList.add('format-form-right');
 
-                    const div_content = document.createElement('div');
-                    div_content.classList.add('content-message');
+                const div_content = document.createElement('div');
+                div_content.classList.add('content-message');
 
-                    const small = document.createElement('small');
-                    small.innerText = user_name_s + ' - ' + time_s;
-                    const p = document.createElement('p');
-                    p.innerText = msg_s;
+                const small = document.createElement('small');
+                small.innerText = user_name_s;
+                const p = document.createElement('p');
+                p.innerText = msg_s;
 
-                    div_content.appendChild(small);
-                    div_content.appendChild(p);
-                    div.appendChild(div_content);
+                div_content.appendChild(small);
+                div_content.appendChild(p);
+                div.appendChild(div_content);
 
-                    document.querySelector('.message').appendChild(div);
+                document.querySelector('.message').appendChild(div);
 
-                    form_message.scrollTop = form_message.scrollHeight;
-                }
-            );
+                form_message.scrollTop = form_message.scrollHeight;
+            });
+        </script>
+
+        <script>
+            $('#new-stranger-room').click(() => {
+                socket.emit('new-stranger-room', '<%- user._id %>');
+                alert(
+                    'Đang tìm đối tượng thích hợp cho bạn vui lòng đợi trong giây lát'
+                );
+
+                // listen event successfull pairing
+                socket.on('successfull-pairing', (room_id) => {
+                    form_redirect.action = '/c/' + room_id;
+                    form_redirect.submit();
+                });
+            });
+
+            $('#new-group').click(() => {
+                socket.emit('new-group-chat', '<%- user._id %>');
+                alert(
+                    `Tạo phòng trò chuyện thành công bấm 'ok' để chuyển hướng`
+                );
+
+                socket.on('redirect-group-chat', (room_id) => {
+                    form_redirect.action = '/c/' + room_id;
+                    form_redirect.submit();
+                });
+            });
         </script>
     </body>
 </html>
