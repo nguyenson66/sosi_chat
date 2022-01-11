@@ -148,6 +148,7 @@ exports.chat = async (req,res) => {
                 }
 
 
+                console.log('response')
                 res.render('client/chat', {
                     title : title_room,
                     user : {
