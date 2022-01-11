@@ -99,7 +99,6 @@ exports.chat = async (req,res) => {
     Room.findById(room_id)
         .then(async function(room) {
             const checkUserInRoom = room.list_user.find(userId => userId == data_user._id)
-            console.log('check')
 
             if(!checkUserInRoom){
                 res.redirect('/')
@@ -109,7 +108,6 @@ exports.chat = async (req,res) => {
                 let message, list_room
                 await Message.find({room_id : room._id})
                     .then(msg => {
-                        console.log('done')
 
                         message = msg
                     })
@@ -148,7 +146,6 @@ exports.chat = async (req,res) => {
                 }
 
 
-                console.log('response')
                 res.render('client/chat', {
                     title : title_room,
                     user : {
