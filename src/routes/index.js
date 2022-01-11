@@ -3,7 +3,7 @@ const client = require('./client')
 
 function routes(app) {
     app.use('/', client)
-    // app.use('/admin', admin)
+    app.use('/admin', admin)
 }
 
 module.exports = routes

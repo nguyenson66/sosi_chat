@@ -92,12 +92,14 @@ exports.joinRoom = async (req,res) => {
 
 //[GET] /c/:id
 exports.chat = async (req,res) => {
+    console.log('start')
     const room_id = req.params.id
     const data_user = req.body.user
 
     Room.findById(room_id)
         .then(async function(room) {
-            const checkUserInRoom = room.list_user.find(user => user == data_user._id)
+            const checkUserInRoom = room.list_user.find(userId => userId == data_user._id)
+            console.log('check')
 
             if(!checkUserInRoom){
                 res.redirect('/')
@@ -107,7 +109,8 @@ exports.chat = async (req,res) => {
                 let message, list_room
                 await Message.find({room_id : room._id})
                     .then(msg => {
-                        
+                        console.log('done')
+
                         message = msg
                     })
                     .catch(err => {

@@ -78,6 +78,8 @@
             </div>
         </div>
 
+        <form name="form-redirect" method="GET"></form>
+
         <script>
             var chat_form = document.getElementById('chat-form');
             var form_message = document.querySelector('.message');
@@ -141,6 +143,8 @@
         </script>
 
         <script>
+            const form_redirect = document.forms['form-redirect'];
+
             $('#new-stranger-room').click(() => {
                 socket.emit('new-stranger-room', '<%- user._id %>');
                 alert(

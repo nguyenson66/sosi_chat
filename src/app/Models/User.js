@@ -10,6 +10,7 @@ const User = new Schema({
     option : [Number],
     email : String,
     status : Number,
+    isAdmin : Boolean,
 }, {versionKey: false})
 
 module.exports = mongoose.model('User', User)

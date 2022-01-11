@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const Message = new Schema({
-    room_id : String,
-    user_id : String,
+    room_id : {type : String, index: true},
+    user_id : {type : String, index: true},
     user_name : String,
     content : String,
     time : String,
