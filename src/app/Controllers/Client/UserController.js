@@ -15,8 +15,14 @@ exports.checkLogin = async (req,res,next) => {
 
         User.findById(data_user.user_id)
             .then(user => {
-                req.body.user = user
-                next()
+                if(user){
+                    req.body.user = user
+                    next()
+                }
+                else{
+                    console.log(err)
+                    res.redirect('/login')
+                }
             })
             .catch(err => {
                 console.log(err)
@@ -41,6 +47,8 @@ exports.loginPOST = async(req,res) => {
     const email = req.body.email
     const password = req.body.password
     let error = []
+
+
 
     User.findOne({email})
     .then(user => {

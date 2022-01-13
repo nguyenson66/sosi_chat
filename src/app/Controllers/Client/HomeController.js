@@ -9,11 +9,13 @@ const Message = require('../../Models/Message')
 //[GET] /
 exports.home = (req,res) => {
     const user = req.body.user
-    let complete_user = false
+    let completed_user = true
 
+    
     if(user.sex == undefined){
-        complete_user = true
+        completed_user = false
     }
+
 
     Room.find({'list_user' : user._id }).then(function(room) {
 
@@ -25,7 +27,7 @@ exports.home = (req,res) => {
             },
             title : 'Sosichat.tech',
             list_room : room,
-            complete_user
+            completed_user
         })
 
     }).catch(err => console.log(err.message))

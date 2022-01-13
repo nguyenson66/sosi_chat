@@ -191,9 +191,9 @@
     display: block;
 }
 
-.form-container h5 {
-    margin-bottom: 30px;
+.modal-content h5 {
     color: yellowgreen;
+    text-align: center;
 }
 
 .form-container button {

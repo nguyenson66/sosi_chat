@@ -6,8 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%- title %></title>
         <link rel="stylesheet" href="/css/home.css" />
-
-        <script src="js/home.js"></script>
     </head>
     <body>
         <section id="home" class="full-height">
@@ -29,6 +27,7 @@
                     style="padding: 20px; height: 60vh"
                     method="post"
                     action="/login"
+                    id="form-login"
                 >
                     <div class="form-control" style="margin: 50px 0 20px 0">
                         <input
@@ -59,11 +58,12 @@
                     style="padding: 20px; height: 60vh"
                     action="/register"
                     method="post"
+                    id="form-register"
                 >
                     <div class="form-control">
                         <input
                             type="text"
-                            id="username"
+                            id="username_r"
                             name="username"
                             placeholder="Your name"
                         />
@@ -73,7 +73,7 @@
                     <div class="form-control">
                         <input
                             type="email"
-                            id="email"
+                            id="email_r"
                             name="email"
                             placeholder="Email"
                         />
@@ -83,7 +83,7 @@
                     <div class="form-control">
                         <input
                             type="password"
-                            id="password"
+                            id="password_r"
                             name="password"
                             placeholder="Password"
                         />
@@ -93,7 +93,7 @@
                     <div class="form-control">
                         <input
                             type="password"
-                            id="password2"
+                            id="password2_r"
                             name="password2"
                             placeholder="Confirm password"
                         />
@@ -162,5 +162,7 @@
 
             loop();
         </script>
+
+        <script src="/js/home.js"></script>
     </body>
 </html>

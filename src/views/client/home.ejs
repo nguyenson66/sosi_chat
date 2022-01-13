@@ -8,7 +8,6 @@
         <link rel="stylesheet" href="/css/chat_room.css" />
 
         <script src="/socket.io/socket.io.js"></script>
-        <script src="/js/home.js"></script>
 
         <link
             rel="stylesheet"
@@ -43,62 +42,116 @@
             </div>
         </div>
 
-        <% if(complete_user) { %>
-            <div class="form-complete-information-user" id="form-complete">
-                <form method="post" action="/complete-user" class="form-container">
-                    <h5>
-                        Vui lòng hoàn thiện hồ sơ để sử dụng chức năng trang web
-                    </h5>
-    
-                    <label for="email"><b>Giới tính : </b></label>
-                    <select name="sex">
-                        <option value="0">Nam</option>
-                        <option value="1">Nữ</option>
-                        <option value="2">Giới tính thứ 3</option>
-                    </select>
-                    <br />
-    
-                    <label for="psw"><b>Ngày sinh : </b></label>
-                    <input
-                        type="date"
-                        placeholder="Enter Password"
-                        name="age"
-                        required
-                    />
-    
-                    <br />
-                    <label for="psw"
-                        ><b>Đối tượng ghép đôi (Có thể lựa chọn nhiều) : </b></label
-                    >
-                    <br />
-                    <label class="checkbox-inline">
-                        <input name="option" type="checkbox" value="0" /> Nam
-                    </label>
-                    <label class="checkbox-inline">
-                        <input name="option" type="checkbox" value="1" /> Nữ
-                    </label>
-                    <label class="checkbox-inline">
-                        <input name="option" type="checkbox" value="2" /> Giới tính thứ 3
-                    </label>
-    
-                    <br>
-    
-                    <input
-                        class="btn btn-success"
-                        style="margin: 20px 0 0 45%"
-                        type="submit"
-                        value="OK"
-                    >
-                    </input>
-                </form>
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="Modal-complete-user"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Vui lòng hoàn thiện hồ sơ để sử dụng chức năng trang
+                            web
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <form
+                            method="post"
+                            action="/complete-user"
+                            class="form-container"
+                            name="form-complete-user"
+                        >
+                            <label for="email"><b>Giới tính : </b></label>
+                            <select name="sex">
+                                <option value="0">Nam</option>
+                                <option value="1">Nữ</option>
+                                <option value="2">Giới tính thứ 3</option>
+                            </select>
+                            <br />
+
+                            <label for="psw"><b>Ngày sinh : </b></label>
+                            <input
+                                type="date"
+                                placeholder="Enter Password"
+                                name="age"
+                                required
+                            />
+
+                            <br />
+                            <label for="psw"
+                                ><b
+                                    >Đối tượng ghép đôi (Có thể lựa chọn nhiều)
+                                    :
+                                </b></label
+                            >
+                            <br />
+                            <label class="checkbox-inline">
+                                <input
+                                    name="option"
+                                    type="checkbox"
+                                    value="0"
+                                />
+                                Nam
+                            </label>
+                            <label class="checkbox-inline">
+                                <input
+                                    name="option"
+                                    type="checkbox"
+                                    value="1"
+                                />
+                                Nữ
+                            </label>
+                            <label class="checkbox-inline">
+                                <input
+                                    name="option"
+                                    type="checkbox"
+                                    value="2"
+                                />
+                                Giới tính thứ 3
+                            </label>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="submit-complete"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
             </div>
-        <% } %>
+        </div>
 
         <form name="form-redirect" method="GET"></form>
 
         <script>
             const image_cupid = document.getElementById('image-cupid');
             const form_redirect = document.forms['form-redirect'];
+            const form_complete_user = document.forms['form-complete-user'];
+            const btnsubmit = document.getElementById('submit-complete')
+
+            const checkUser = <%- completed_user %>;
+            console.log(checkUser);
+
+            /// show model complete information user ///
+            function completeUser() {
+                $('#Modal-complete-user').modal('show');
+            }
+
+            ///////// event button submit complete information user ////////////
+            btnsubmit.onclick = () => {
+                form_complete_user.submit()
+            }
+
+            if(!checkUser)
+                completeUser()
 
             ////// socket ///////
             let socket = io();
@@ -118,29 +171,39 @@
             }
 
             $('#new-stranger-room').click(() => {
-                alert(
-                    'Đang tìm đối tượng thích hợp cho bạn vui lòng đợi trong giây lát'
-                );
+                if(checkUser){
+                    alert(
+                        'Đang tìm đối tượng thích hợp cho bạn vui lòng đợi trong giây lát'
+                    );
 
-                socket.emit('new-stranger-room', '<%- user._id %>');
+                    socket.emit('new-stranger-room', '<%- user._id %>');
 
-                // listen event successfull pairing
-                socket.on('successfull-pairing', (room_id) => {
-                    form_redirect.action = '/c/' + room_id;
-                    form_redirect.submit();
-                });
+                    // listen event successfull pairing
+                    socket.on('successfull-pairing', (room_id) => {
+                        form_redirect.action = '/c/' + room_id;
+                        form_redirect.submit();
+                    });
+                }
+                else{
+                    completeUser()
+                }
             });
 
             $('#new-group').click(() => {
-                socket.emit('new-group-chat', '<%- user._id %>');
-                alert(
-                    `Tạo phòng trò chuyện thành công bấm 'ok' để chuyển hướng`
-                );
+                if(checkUser){
+                    socket.emit('new-group-chat', '<%- user._id %>');
+                    alert(
+                        `Tạo phòng trò chuyện thành công bấm 'ok' để chuyển hướng`
+                    );
 
-                socket.on('redirect-group-chat', (room_id) => {
-                    form_redirect.action = '/c/' + room_id;
-                    form_redirect.submit();
-                });
+                    socket.on('redirect-group-chat', (room_id) => {
+                        form_redirect.action = '/c/' + room_id;
+                        form_redirect.submit();
+                    });
+                }
+                else{
+                    completeUser()
+                }
             });
         </script>
 

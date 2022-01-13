@@ -22,3 +22,7 @@ exports.checkLogin = (req,res,next) => {
             })
     }
 }
+
+exports.test = (req,res) => {
+    res.json(req.body)
+}

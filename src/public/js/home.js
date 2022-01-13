@@ -1,8 +1,13 @@
-const form = document.querySelector('form')
-const username = document.getElementById('username')
+const form_r = document.getElementById('form-register')
+const form_login = document.getElementById('form-login')
+
+const username_r = document.getElementById('username_r')
+const email_r = document.getElementById('email_r')
+const password_r = document.getElementById('password_r')
+const password2_r = document.getElementById('password2_r')
+
 const email = document.getElementById('email')
 const password = document.getElementById('password')
-const password2 = document.getElementById('password2')
 
 // Show input error message
 function showError(input, message) {
@@ -77,13 +82,26 @@ function getFieldName(input) {
 }
 
 // Event listeners
-form.addEventListener('submit', function (e) {
+form_r.addEventListener('submit', function (e) {
 	e.preventDefault()
 
-	if (!checkRequired([username, email, password, password2])) {
-		checkLength(username, 3, 15)
-		checkLength(password, 6, 25)
+	if (!checkRequired([username_r, email_r, password_r, password2_r])) {
+		checkLength(username_r, 3, 15)
+		checkLength(password_r, 6, 25)
+		checkEmail(email_r)
+		checkPasswordsMatch(password_r, password2_r)
+
+		form_r.submit()
+	}
+})
+
+form_login.addEventListener('submit', function (e) {
+	e.preventDefault()
+
+	if (!checkRequired([email, password])) {
+		checkLength(password, 5, 25)
 		checkEmail(email)
-		checkPasswordsMatch(password, password2)
+
+		form_login.submit()
 	}
 })
