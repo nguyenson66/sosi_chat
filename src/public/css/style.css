@@ -1,0 +1,166 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    padding: 0;
+}
+
+/* /////////////// navbar ///////////// */
+.nav {
+    /* background-color: pink; */
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    color: #fff;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav.active {
+    background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav ul {
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav li {
+    margin: 0 7px 0 7px;
+    font-size: 20px;
+}
+
+.nav li:hover {
+    color: pink;
+}
+
+.logo {
+    font-size: 25px;
+}
+
+/* /////////////// hero ///////////// */
+
+.hero {
+    background-image: url('https://res.cloudinary.com/soicondibui/image/upload/v1642579605/sosichat/couple-3064048_oybovh.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    height: 100vh;
+}
+
+.hero .container {
+    color: white;
+}
+
+.hero .container h1 {
+    font-size: 38px;
+}
+
+.hero .container p {
+    font-size: 18px;
+}
+
+.hero button {
+    margin: 70px 0 -100px;
+    height: 40px;
+    width: 150px;
+}
+
+/* /////////////// introduce //////////////// */
+
+.introduce {
+    background-color: #f7f7f7;
+    padding: 10vh 20px 20vh 20px;
+    right: 0;
+    left: 0;
+}
+
+.general-introduce h1 {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.general-introduce ul {
+    list-style-type: none;
+    text-align: center;
+    margin: 30px 20px 30px 20px;
+}
+
+.general-introduce li:hover {
+    color: rgb(245, 122, 142);
+}
+
+.general-introduce img {
+    height: 80px;
+    width: auto;
+    margin: 10px;
+}
+
+.image-introduce {
+    display: flex;
+    justify-content: center;
+}
+
+.image-introduce img {
+    height: 250px;
+    width: auto;
+    margin-bottom: 20px;
+}
+
+/* //////// footer //////////// */
+
+.footer {
+    background-color: rgb(31, 27, 27);
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.footer-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 5%;
+}
+
+.footer-link ul {
+    list-style-type: none;
+}
+
+.follow-me a {
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.follow-me a:hover {
+    color: #ff5858;
+}
+
+.footer p {
+    margin-bottom: -5px;
+    text-align: center;
+}

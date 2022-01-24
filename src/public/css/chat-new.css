@@ -1,0 +1,299 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: #fff;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.layout {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+/* /////////////////////////////////////////////////////////// */
+
+.conversation {
+    width: 100%;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    background-image: url('https://res.cloudinary.com/soicondibui/image/upload/v1642579605/sosichat/couple-3064048_oybovh.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.conversation-information {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.conversation-option img {
+    height: 30px;
+    width: auto;
+}
+
+.name-conversation {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.name-conversation img {
+    height: 50px;
+    width: auto;
+    border-radius: 50%;
+    border: solid 0.5px pink;
+    margin-right: 20px;
+}
+
+/* /// box message /// */
+
+.box-message {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.message {
+    margin-left: 5px;
+}
+
+.message.my-message {
+    margin: 0 5px 0 0;
+    display: flex;
+    justify-content: right;
+}
+
+.message.my-message .message-content {
+    background-color: greenyellow;
+}
+
+.message.my-message .message-user {
+    justify-content: right;
+}
+
+.message-user {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.message-user img {
+    height: 35px;
+    width: auto;
+    border-radius: 50%;
+    border: solid 1px pink;
+}
+
+.message-user p {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 15px;
+    margin-left: 6px;
+}
+
+.message-content {
+    max-width: 50vh;
+    min-width: 20vh;
+    padding: 4px;
+    padding-bottom: -10px;
+    text-align: center;
+    align-items: center;
+    width: fit-content;
+    background-color: pink;
+    margin-top: -8px;
+    border-radius: 10px;
+}
+
+/* ////// box send message */
+.box-send-message {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.input-message {
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+    padding: 2px 6px 2px 6px;
+    border: none;
+}
+
+.box-send-message button {
+    background: url('https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/send_usggh4.png')
+        no-repeat;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 26px;
+    color: rgb(35, 78, 218);
+    align-items: center;
+}
+
+/* .btn-send-message i {
+    cursor: pointer;
+    color: rgb(32, 137, 235);
+    font-size: 30px;
+    padding: 6px;
+    margin-left: 10px;
+} */
+
+/* /////////////////////////////////////////////////////////// */
+
+.information {
+    width: 10vh;
+    min-width: 10vh;
+    /* width: 55vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: solid 0.1px rgb(143, 142, 142);
+}
+
+.control {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.control i {
+    right: 0;
+    cursor: pointer;
+    margin-left: 20vh;
+    font-size: 26px;
+}
+
+.avatar-user {
+    left: 0;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    width: 10vh;
+    min-width: 10vh;
+}
+
+.control img {
+    height: 48px;
+    width: auto;
+    border-radius: 50%;
+    border: solid 0.5px pink;
+}
+
+/* /////////////////////////////////// */
+
+.list-room {
+    /* padding: 15px 0; */
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.list-room::-webkit-scrollbar {
+    display: none;
+}
+
+.room-information {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 0;
+    border-bottom: solid 0.1px rgb(172, 171, 171);
+}
+
+.room-information:hover {
+    background-color: pink;
+    border: none;
+}
+
+.content-room {
+    display: none;
+}
+.avatar-room {
+    width: 10vh;
+    display: flex;
+    justify-content: center;
+}
+
+.room-information img {
+    position: relative;
+    height: 48px;
+    width: auto;
+    border-radius: 50%;
+    border: solid 1px #000;
+}
+
+/* /////////////////////////////////// */
+
+.report-error {
+    cursor: pointer;
+    bottom: 0;
+    padding: 10px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.report-error img {
+    position: relative;
+    height: 30px;
+    width: auto;
+}
+
+.report-error h6 {
+    display: none;
+    margin-top: 5px;
+}
+
+/* ///////// set size browser ////////////// */
+
+@media screen and (min-width: 1000px) {
+    .information {
+        width: 70vh;
+    }
+
+    .control {
+        justify-content: center;
+    }
+
+    .content-room {
+        margin: 10px 0 0 10px;
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .report-error h6 {
+        display: block;
+    }
+
+    .message-content {
+        max-width: 70vh;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .report-error {
+        display: none;
+    }
+}

@@ -7,6 +7,11 @@ const Message = require('../../Models/Message')
 
 
 //[GET] /
+exports.introduce = (req,res) => {
+    res.render('client/introduce')
+}
+
+//[GET] /home
 exports.home = (req,res) => {
     const user = req.body.user
     let completed_user = true
@@ -118,8 +123,9 @@ exports.chat = async (req,res) => {
                     }
                 }
 
+                console.log(list_room)
 
-                res.render('client/chat', {
+                res.render('client/chat-new', {
                     title : title_room,
                     user : {
                         '_id' : data_user._id,
@@ -139,6 +145,9 @@ exports.chat = async (req,res) => {
         })
 }
 
-
+//[GET] /rutgon
+exports.rutgon = (req,res) => {
+    res.render('client/rutgon')
+}
 
 /////////////////////////////////// POST ///////////////////////////////////////
