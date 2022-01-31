@@ -11,6 +11,11 @@ exports.introduce = (req,res) => {
     res.render('client/introduce')
 }
 
+//[GET] /chucmungnammoi
+exports.chucmungnammoi = (req,res) => {
+    res.render('client/happynewyear')
+}
+
 //[GET] /home
 exports.home = (req,res) => {
     const user = req.body.user
@@ -123,7 +128,6 @@ exports.chat = async (req,res) => {
                     }
                 }
 
-                console.log(list_room)
 
                 res.render('client/chat-new', {
                     title : title_room,

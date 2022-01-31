@@ -158,6 +158,7 @@ body {
 
 .follow-me a:hover {
     color: #ff5858;
+    text-decoration: none;
 }
 
 .footer p {

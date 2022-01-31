@@ -210,6 +210,15 @@ body {
     display: none;
 }
 
+.list-room a {
+    color: #000;
+}
+
+.list-room a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
 .room-information {
     display: flex;
     align-items: center;

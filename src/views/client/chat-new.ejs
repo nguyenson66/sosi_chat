@@ -38,16 +38,18 @@
                 <div class="list-room">
 
                     <% for(let i=0;i<list_room.length;i++) { %> 
-                        <div class="room-information">
-                            <div class="avatar-room">
-                                <img src="https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png" alt="room" />
+                        <a href="/c/<%- list_room[i]._id %>">
+                            <div class="room-information">
+                                <div class="avatar-room">
+                                    <img src="https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png" alt="room" />
+                                </div>
+                                
+                                <div class="content-room">
+                                        <h6><%- list_room[i].title %></h6>
+                                        <p>BOT : Chúc các bạn trò chuyện vui vẻ</p>
+                                    </div>
                             </div>
-
-                            <div class="content-room">
-                                <h6><%- list_room[i].title %></h6>
-                                <p>BOT : Chúc các bạn trò chuyện vui vẻ</p>
-                            </div>
-                        </div>
+                        </a>
                     <% } %>
                 </div>
 

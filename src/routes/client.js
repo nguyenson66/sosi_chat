@@ -8,6 +8,7 @@ router.get('/c/:id', UserController.checkLogin, HomeController.chat)
 router.get('/j/:id', UserController.checkLogin, HomeController.joinRoom)
 router.get('/home', UserController.checkLogin, HomeController.home)
 router.get('/rutgon', HomeController.rutgon)
+router.get('/chucmungnammoi', HomeController.chucmungnammoi)
 router.get('', HomeController.introduce)
 
 
