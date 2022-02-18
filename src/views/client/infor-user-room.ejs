@@ -1,25 +1,44 @@
-<div class="layout-chat-room">
-    <div class="infor-user-search">
-        <div class="infor-user">
-            <img src="<%- user.avatar %>" />
-
-            <span><%- user.user_name %></span>
+<div class="information">
+    <div style="box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);">
+        <div class="control">
+            <div class="avatar-user">
+                <img
+                    src="https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/user_h0cglb.png"
+                    alt="avatar"
+                />
+            </div>
+    
+            <h2>Chat</h2>
+    
+            <i class="fa fa-gear"></i>
         </div>
-
-        <button id="new-stranger-room">Nhắn tin với người lạ</button>
-        <button id="new-group">Tạo nhóm trò chuyện</button>
+        <div class="option">
+            <button onclick="newStranger()">Nhắn tin với người lạ</button>
+            <button onclick="newGroup()">Tạo nhóm trò chuyện</button>
+        </div>
     </div>
 
     <div class="list-room">
-        <div class="infor-room">
-            <% for(let i=0; i < list_room.length ; i++) { %>
-            <a class="room btn" href="/c/<%- list_room[i]._id %>">
-                <img src="/images/<%- list_room[i].avatar %>" />
-                <p style="display: inline; margin-left: 15px">
-                    <%- list_room[i].title %>
-                </p>
-            </a>
-            <% } %>
-        </div>
+
+        <% for(let i=0;i<list_room.length;i++) { %> 
+                <div class="room-information" onclick="redirectRoom('/c/<%- list_room[i]._id %>')">
+                    <div class="avatar-room">
+                        <img src="https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png" alt="room" />
+                    </div>
+                    
+                    <div class="content-room">
+                            <h6><%- list_room[i].title %></h6>
+                            <p>BOT : Chúc các bạn trò chuyện vui vẻ</p>
+                        </div>
+                </div>
+        <% } %>
+    </div>
+
+    <div class="report-error">
+        <img
+            src="https://res.cloudinary.com/soicondibui/image/upload/v1642669694/sosichat/icon/error_juzubm.png"
+            alt="error"
+        />
+        <h6>Report - Báo lỗi</h6>
     </div>
 </div>

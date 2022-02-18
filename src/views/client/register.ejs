@@ -8,19 +8,28 @@
 
         <link rel="icon" href="/images/cupid.png" />
 
-        <link rel="stylesheet" href="/css/login.css" />
+        <link rel="stylesheet" href="/css/register.css" />
     </head>
     <body>
         <main>
             <div class="form-input">
-                <h1>Đăng nhập ngay để trải nghiệm dịch vụ</h1>
+                <h1>Đăng ký ngay để trải nghiệm dịch vụ</h1>
 
-                <% if(error) {%>
+                <% if(error) { %>
+
                 <p class="error" id="error"><%- error %></p>
+
                 <% } %>
 
-                <form action="/login" method="post" id="form-register">
+                <form action="/register" method="post" id="form-register">
                     <div class="data-form">
+                        <p>Tên của bạn</p>
+                        <input
+                            name="username"
+                            id="username"
+                            type="text"
+                            placeholder="VD : Nguyễn Thị A"
+                        />
                         <p>Địa chỉ email</p>
                         <input
                             name="email"
@@ -30,17 +39,23 @@
                         />
                         <p>Mật khẩu</p>
                         <input name="password" id="password" type="password" />
+                        <p>Nhập lại mật khẩu</p>
+                        <input
+                            name="password2"
+                            id="password2"
+                            type="password"
+                        />
                     </div>
                 </form>
-                <button onclick="checkValidLogin()">Login</button>
+                <button onclick="checkValidRegister()">Register</button>
 
                 <span
-                    >Bạn chưa có tài khoản ?
-                    <a href="/register">Đăng ký ngay</a></span
+                    >Bạn đã có tài khoản ?
+                    <a href="/login">Đăng nhập ngay</a></span
                 >
             </div>
         </main>
 
-        <script src="/js/login.js"></script>
+        <script src="/js/register.js"></script>
     </body>
 </html>

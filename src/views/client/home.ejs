@@ -4,17 +4,40 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%- title %></title>
-        <link rel="stylesheet" href="/css/chat_room.css" />
-
-        <script src="/socket.io/socket.io.js"></script>
-
+        <title>Sositech.xyz Web</title>
+        <link rel="stylesheet" href="/css/chat-new.css" />
+        <link rel="stylesheet" href="/css/toast.css" />
         <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossorigin="anonymous"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+
+        <script
+            src="https://kit.fontawesome.com/8bf767fd4b.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <link rel="icon" href="/images/cupid.png" />
+
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <div class="layout">
+            <%- include("./infor-user-room.ejs") %>
+
+            <div class="home">
+                <div id="notification"></div>
+            </div>
+        </div>
+
+        <script src="/js/toast.js"></script>
+
         <script
             src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -25,188 +48,21 @@
             integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
             crossorigin="anonymous"
         ></script>
-    </head>
-    <body class="background">
-        <div>
-            <%- include('infor-user-room') %>
-
-            <div class="layout-message">
-                <img id="image-cupid" src="/images/cupid.png" />
-
-                <div class="introduce-home">
-                    <h2>Cảm ơn bạn đã tham gia sosichat.xyz</h2>
-                    <span>
-                        Chúc bạn có những phút giây vui vẻ với mọi người
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div
-            class="modal fade"
-            id="Modal-complete-user"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="exampleModalCenterTitle"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">
-                            Vui lòng hoàn thiện hồ sơ để sử dụng chức năng trang
-                            web
-                        </h5>
-                    </div>
-                    <div class="modal-body">
-                        <form
-                            method="post"
-                            action="/complete-user"
-                            class="form-container"
-                            name="form-complete-user"
-                        >
-                            <label for="email"><b>Giới tính : </b></label>
-                            <select name="sex">
-                                <option value="0">Nam</option>
-                                <option value="1">Nữ</option>
-                                <option value="2">Giới tính thứ 3</option>
-                            </select>
-                            <br />
-
-                            <label for="psw"><b>Ngày sinh : </b></label>
-                            <input
-                                type="date"
-                                placeholder="Enter Password"
-                                name="age"
-                                required
-                            />
-
-                            <br />
-                            <label for="psw"
-                                ><b
-                                    >Đối tượng ghép đôi (Có thể lựa chọn nhiều)
-                                    :
-                                </b></label
-                            >
-                            <br />
-                            <label class="checkbox-inline">
-                                <input
-                                    name="option"
-                                    type="checkbox"
-                                    value="0"
-                                />
-                                Nam
-                            </label>
-                            <label class="checkbox-inline">
-                                <input
-                                    name="option"
-                                    type="checkbox"
-                                    value="1"
-                                />
-                                Nữ
-                            </label>
-                            <label class="checkbox-inline">
-                                <input
-                                    name="option"
-                                    type="checkbox"
-                                    value="2"
-                                />
-                                Giới tính thứ 3
-                            </label>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            id="submit-complete"
-                        >
-                            Save
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <form name="form-redirect" method="GET"></form>
 
         <script>
-            const image_cupid = document.getElementById('image-cupid');
-            const form_redirect = document.forms['form-redirect'];
-            const form_complete_user = document.forms['form-complete-user'];
-            const btnsubmit = document.getElementById('submit-complete')
+            //infor user
+            var user_id = '<%- user._id%>';
+            var user_name = '<%- user.username %>';
 
-            const checkUser = <%- completed_user %>;
-            console.log(checkUser);
-
-            /// show model complete information user ///
-            function completeUser() {
-                $('#Modal-complete-user').modal('show');
+            // event click room
+            function redirectRoom(id) {
+                window.location.href = id;
             }
-
-            ///////// event button submit complete information user ////////////
-            btnsubmit.onclick = () => {
-                form_complete_user.submit()
-            }
-
-            if(!checkUser)
-                completeUser()
 
             ////// socket ///////
             let socket = io();
-
-            /////////////////////
-            /// image up down
-            let imageUpDown = 10,
-                f = 0.2;
-            setTimeout(upDown, 50);
-
-            function upDown() {
-                image_cupid.style.top = `${imageUpDown}%`;
-                if (imageUpDown <= 15 && imageUpDown >= 5) imageUpDown += f;
-                if (Math.abs(5 - imageUpDown) < 0.2) f = 0.2;
-                if (Math.abs(15 - imageUpDown) < 0.2) f = -0.2;
-                setTimeout(upDown, 50);
-            }
-
-            $('#new-stranger-room').click(() => {
-                if(checkUser){
-                    alert(
-                        'Đang tìm đối tượng thích hợp cho bạn vui lòng đợi trong giây lát'
-                    );
-
-                    socket.emit('new-stranger-room', '<%- user._id %>');
-
-                    // listen event successfull pairing
-                    socket.on('successfull-pairing', (room_id) => {
-                        form_redirect.action = '/c/' + room_id;
-                        form_redirect.submit();
-                    });
-                }
-                else{
-                    completeUser()
-                }
-            });
-
-            $('#new-group').click(() => {
-                if(checkUser){
-                    socket.emit('new-group-chat', '<%- user._id %>');
-                    alert(
-                        `Tạo phòng trò chuyện thành công bấm 'ok' để chuyển hướng`
-                    );
-
-                    socket.on('redirect-group-chat', (room_id) => {
-                        form_redirect.action = '/c/' + room_id;
-                        form_redirect.submit();
-                    });
-                }
-                else{
-                    completeUser()
-                }
-            });
         </script>
 
-        <!-- <script src="/js/option.js"></script> -->
+        <script src="/js/createRoom.js"></script>
     </body>
 </html>

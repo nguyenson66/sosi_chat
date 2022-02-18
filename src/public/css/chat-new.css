@@ -24,7 +24,7 @@ body {
     justify-content: space-between;
     flex-direction: column;
 
-    background-image: url('https://res.cloudinary.com/soicondibui/image/upload/v1642579605/sosichat/couple-3064048_oybovh.jpg');
+    background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -37,6 +37,14 @@ body {
     align-items: center;
     padding: 0 20px;
     box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.conversation-information h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
 }
 
 .conversation-option img {
@@ -78,45 +86,54 @@ body {
 }
 
 .message.my-message .message-content {
-    background-color: greenyellow;
+    background-color: rgb(134, 195, 252);
+    border: solid 1px #fff;
 }
 
-.message.my-message .message-user {
-    justify-content: right;
-}
+/* .message.my-message .message-user {
+    justify-content: left;
+} */
 
 .message-user {
     display: flex;
+    width: fit-content;
     flex-direction: row;
-    justify-content: left;
     align-items: center;
+    justify-content: left;
 }
 
 .message-user img {
     height: 35px;
     width: auto;
     border-radius: 50%;
-    border: solid 1px pink;
+    border: solid 1px rgb(255, 255, 255);
 }
 
 .message-user p {
     font-size: 16px;
     text-align: center;
-    margin-top: 15px;
-    margin-left: 6px;
+    margin: 2px 0 0 6px;
 }
 
 .message-content {
     max-width: 50vh;
     min-width: 20vh;
-    padding: 4px;
-    padding-bottom: -10px;
-    text-align: center;
-    align-items: center;
     width: fit-content;
-    background-color: pink;
-    margin-top: -8px;
+    padding: 4px;
     border-radius: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    border: solid 1px rgb(92, 92, 255);
+    background-color: #fff;
+}
+
+.content {
+    word-wrap: break-word;
+    font-size: 16px;
+}
+
+.time-send {
+    font-size: 13px;
 }
 
 /* ////// box send message */
@@ -135,6 +152,10 @@ body {
     border-radius: 10px;
     padding: 2px 6px 2px 6px;
     border: none;
+}
+
+.input-message:focus {
+    outline: none;
 }
 
 .box-send-message button {
@@ -172,7 +193,7 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    /* border-bottom: solid 1px rgb(145, 145, 145); */
 }
 
 .control i {
@@ -198,6 +219,34 @@ body {
     border: solid 0.5px pink;
 }
 
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2px;
+}
+
+.option button {
+    outline: none;
+    border: solid 1px rgb(81, 223, 255);
+    padding: 2px;
+    border-radius: 5px;
+    background-color: rgb(255, 215, 230);
+
+    white-space: nowrap;
+    text-align: center;
+
+    font-size: 15px;
+}
+
+.option button:hover {
+    background-color: rgb(250, 193, 214);
+}
+
+.option button:active {
+    transform: translateY(1px);
+}
+
 /* /////////////////////////////////// */
 
 .list-room {
@@ -220,6 +269,7 @@ body {
 }
 
 .room-information {
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: left;
@@ -228,8 +278,7 @@ body {
 }
 
 .room-information:hover {
-    background-color: pink;
-    border: none;
+    background-color: rgb(228, 228, 228);
 }
 
 .content-room {
@@ -301,8 +350,29 @@ body {
     }
 }
 
+@media screen and (max-width: 999px) {
+    .option {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .option {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 400px) {
+    .option {
+        display: none;
+    }
+
     .report-error {
         display: none;
+    }
+
+    .message-content {
+        min-width: 20vh;
+        max-width: 45vh;
     }
 }
