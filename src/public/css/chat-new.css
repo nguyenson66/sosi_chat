@@ -181,8 +181,7 @@ body {
 
 .information {
     width: 10vh;
-    min-width: 10vh;
-    /* width: 55vh; */
+    /* width: 80vh; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -210,6 +209,7 @@ body {
     padding: 5px;
     width: 10vh;
     min-width: 10vh;
+    cursor: pointer;
 }
 
 .control img {
@@ -284,6 +284,15 @@ body {
 .content-room {
     display: none;
 }
+
+.content-room p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
 .avatar-room {
     width: 10vh;
     display: flex;
@@ -360,6 +369,10 @@ body {
     .option {
         display: none;
     }
+
+    /* .content-room {
+        display: block;
+    } */
 }
 
 @media screen and (max-width: 400px) {
