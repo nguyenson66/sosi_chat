@@ -7,6 +7,7 @@ const Message = require('../../Models/Message');
 
 //[GET] /
 exports.introduce = (req, res) => {
+    console.log('client send require');
     res.render('client/introduce');
 };
 
