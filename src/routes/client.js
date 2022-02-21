@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const HomeController = require('../app/Controllers/Client/HomeController');
 const UserController = require('../app/Controllers/Client/UserController');
+const path = require('path');
+
+router.get(
+    '/.well-known/pki-validation/F83F345113877CC4A9852640301B7A2E.txt',
+    (req, res) => {
+        res.sendFile(
+            path.join(__dirname + '../../') +
+                '/public/F83F345113877CC4A9852640301B7A2E.txt'
+        );
+    }
+);
 
 router.get('/login', UserController.login);
 router.get('/register', UserController.register);
