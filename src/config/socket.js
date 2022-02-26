@@ -104,7 +104,7 @@ function socketIO(io) {
                             list_user: [user_id, list_user_2[rd_user]._id],
                             public_infor: false,
                             public_room: false,
-                            avatar: 'avatar_room.jpg',
+                            avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/question_2_p4nifa.png',
                         });
 
                         room.save((err, room) => {
@@ -134,7 +134,7 @@ function socketIO(io) {
                     list_user: [user_id],
                     public_room: true,
                     public_infor: true,
-                    avatar: 'avatar_room.jpg',
+                    avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png',
                 },
                 function (err, data) {
                     if (err) console.log(err.message);

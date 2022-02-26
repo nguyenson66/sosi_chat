@@ -6,7 +6,7 @@ const User = require('../../Models/User');
 exports.checkLogin = async (req, res, next) => {
     const user_cookie = req.cookies.user_cookie;
     if (!user_cookie) {
-        res.redirect('/login');
+        res.redirect('/introduce');
     } else {
         const data_user = jwt.verify(user_cookie, process.env.JWT_KEY);
 
@@ -14,16 +14,25 @@ exports.checkLogin = async (req, res, next) => {
             .then((user) => {
                 if (user) {
                     req.body.user = user;
+
                     next();
                 } else {
-                    console.log(err);
-                    res.redirect('/login');
+                    // console.log(err);
+                    res.redirect('/introduce');
                 }
             })
             .catch((err) => {
-                console.log(err);
-                res.redirect('/login');
+                // console.log(err);
+                res.redirect('/introduce');
             });
+    }
+};
+
+exports.checkCompleteUser = async (req, res, next) => {
+    if (req.body.user.age === undefined) {
+        res.redirect('/my-profile');
+    } else {
+        next();
     }
 };
 
@@ -38,6 +47,34 @@ exports.login = async (req, res) => {
 exports.register = (req, res) => {
     res.render('client/register', {
         error: [],
+    });
+};
+
+//[GET] /my-profile
+exports.myProfile = (req, res) => {
+    let err = '',
+        status = 'false';
+
+    const user = req.body.user;
+    let dataUser = {
+        username: user.username,
+        email: user.email,
+    };
+
+    if (user.sex === undefined) {
+        err = 'Vui lòng hoàn thiện hồ sơ để tiếp tục sử dụng dịch vụ';
+        status = 'true';
+        dataUser.option = [];
+    } else {
+        dataUser.age = user.age;
+        dataUser.option = user.option;
+        dataUser.sex = user.sex;
+    }
+
+    res.render('client/profile', {
+        err,
+        status,
+        user: dataUser,
     });
 };
 
@@ -72,7 +109,7 @@ exports.loginPOST = async (req, res) => {
                         maxAge: 5 * 24 * 60 * 60000,
                     });
 
-                    res.redirect('/home');
+                    res.redirect('/');
                 } else {
                     res.status(302).render('client/login', {
                         error: 'Thông tin tài khoản hoặc mật khẩu không chính xác',
@@ -121,15 +158,48 @@ exports.registerPOST = async (req, res) => {
     }
 };
 
-//[POST] /complete-user
-exports.CompleteUser = async (req, res) => {
-    let user = req.body.user;
-    user.sex = req.body.sex;
-    user.age = req.body.age;
-    user.option = req.body.option;
+//[POST] /my-profile
+exports.myProfilePOST = async (req, res) => {
+    if (req.body.age === '' || req.body.sex === '') {
+        // check if age == null or user.sex == null render view profile
 
-    const updateUser = new User(user);
-    updateUser.save();
+        let err = '',
+            status = 'false';
 
-    res.redirect('/');
+        const user = req.body.user;
+        let dataUser = {
+            username: user.username,
+            email: user.email,
+        };
+
+        if (user.sex === undefined) {
+            err = 'Vui lòng hoàn thiện hồ sơ để tiếp tục sử dụng dịch vụ';
+            status = 'true';
+            dataUser.option = [];
+        } else {
+            dataUser.age = user.age;
+            dataUser.option = user.option;
+            dataUser.sex = user.sex;
+        }
+
+        res.render('client/profile', {
+            err,
+            status,
+            user: dataUser,
+        });
+    } else {
+        let user = req.body.user;
+        user.age = req.body.age;
+        user.username = req.body.username;
+        user.sex = req.body.sex;
+        if (req.body.option) {
+            user.option = req.body.option;
+        } else {
+            user.option = [];
+        }
+
+        const newUser = new User(user);
+        newUser.save();
+        res.redirect('/my-profile');
+    }
 };

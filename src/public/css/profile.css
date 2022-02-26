@@ -1,0 +1,126 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: 5px 0;
+    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+input:focus {
+    outline: none;
+    border: solid 1px rgb(0, 255, 85);
+    padding: 5px 7px;
+}
+
+input {
+    padding: 5px 7px;
+    border: solid 1px rgb(99, 99, 99);
+    border-radius: 5px;
+}
+
+.profile {
+    background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 5px 8px rgb(169, 169, 169);
+    margin: 0 20vh;
+    min-height: 100vh;
+}
+
+.user-image {
+    height: 25vh;
+    width: 100%;
+    position: relative;
+}
+
+.cover-image {
+    height: 20vh;
+    width: 100%;
+    background-color: greenyellow;
+    border-radius: 15px 15px 0 0;
+    background-image: url('/images/cover.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.avatar-image {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.avatar-image img {
+    background-color: rgb(238, 238, 238);
+    height: 20vh;
+    width: 20vh;
+    border-radius: 50%;
+    border: solid rgb(17, 139, 253) 2px;
+}
+
+.user-information {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 70vh;
+}
+
+#form-change-profile {
+    width: 100%;
+    padding: 20px 50px;
+}
+
+.profile-data {
+    width: 100%;
+    padding: 20px 50px;
+}
+
+.block {
+    display: none;
+}
+
+.data {
+    display: none;
+    margin: 10px 0;
+}
+
+.block-button {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+@media only screen and (max-width: 850px) and (max-height: 1200px) {
+    .profile {
+        margin: 0 8vh;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .profile {
+        margin: 0 10vh;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .profile {
+        min-height: 120vh;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .profile {
+        margin: 0 5px;
+        min-height: 128vh;
+    }
+}

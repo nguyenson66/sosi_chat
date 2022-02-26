@@ -17,6 +17,24 @@ body {
 
 /* /////////////////////////////////////////////////////////// */
 
+/* home */
+
+.home {
+    background-color: #f5efef;
+    width: 100%;
+}
+
+.slide-show {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* -------- */
+
 .conversation {
     width: 100%;
     right: 0;

@@ -5,6 +5,11 @@
 
 body {
     padding: 0;
+    overflow-x: hidden;
+}
+
+ul {
+    list-style-type: none;
 }
 
 /* /////////////// navbar ///////////// */
@@ -95,9 +100,25 @@ body {
     left: 0;
 }
 
-.general-introduce h1 {
+.introduce-1 {
+    display: flex;
+    align-items: center;
+}
+
+.review-text {
     text-align: center;
-    margin-bottom: 18px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.review-text h2 {
+    max-width: 500px;
+}
+
+.general-introduce h1 {
+    margin-top: 50px;
+    text-align: center;
 }
 
 .general-introduce ul {
@@ -144,10 +165,6 @@ body {
     flex-direction: row;
     justify-content: space-between;
     padding: 10px 5%;
-}
-
-.footer-link ul {
-    list-style-type: none;
 }
 
 .follow-me a {

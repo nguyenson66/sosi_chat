@@ -5,13 +5,12 @@ const User = require('../../Models/User');
 const Room = require('../../Models/Room');
 const Message = require('../../Models/Message');
 
-//[GET] /
+//[GET] /introduce
 exports.introduce = (req, res) => {
-    console.log('client send require');
     res.render('client/introduce');
 };
 
-//[GET] /home
+//[GET] /
 exports.home = (req, res) => {
     const user = req.body.user;
     let completed_user = true;
