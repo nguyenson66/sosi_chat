@@ -30,6 +30,6 @@ routes(app);
 socketIO(io);
 /////////////
 
-server.listen(3000, () => {
+server.listen(80, () => {
     console.log('server is running');
 });
