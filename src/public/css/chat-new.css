@@ -134,13 +134,13 @@ body {
 }
 
 .message-content {
-    max-width: 50vh;
+    max-width: 90vh;
     min-width: 20vh;
     width: fit-content;
     padding: 4px;
     border-radius: 10px;
     margin-bottom: 10px;
-    padding-left: 10px;
+    padding: 5px;
     border: solid 1px rgb(92, 92, 255);
     background-color: #fff;
 }
@@ -150,18 +150,77 @@ body {
     font-size: 16px;
 }
 
+.content.sticker-message img {
+    height: 20vh;
+    width: auto;
+}
+
+.content.image-message img {
+    max-width: 65vh;
+    height: auto;
+}
+
 .time-send {
     font-size: 13px;
 }
 
-/* ////// box send message */
+/* ////// show list sticker ,box send message and chat bar */
+
+.show-list-sticker {
+    display: none;
+    position: fixed;
+    background-color: #ffff;
+    bottom: 78px;
+    left: 10vh;
+    border-radius: 8px;
+    padding: 5px;
+    height: 400px;
+    width: 350px;
+    box-shadow: 1px 1px 1px rgb(165, 165, 165);
+    overflow-y: scroll;
+}
+
+.show-list-sticker::-webkit-scrollbar {
+    display: none;
+}
+
+.sticker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: solid 1px rgb(124, 124, 124);
+    margin-bottom: 10px;
+}
+
+.sticker img {
+    cursor: pointer;
+    width: 85px;
+    height: auto;
+}
+
+.sticker img:hover {
+    background-color: rgb(216, 216, 216);
+}
+
+.chatbar {
+    margin-bottom: 4px;
+}
+
+.chatbar i {
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.chatbar i:active {
+    transform: translateY(2px);
+}
+
 .box-send-message {
-    padding: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
 .input-message {
@@ -374,6 +433,10 @@ body {
 
     .message-content {
         max-width: 70vh;
+    }
+
+    .show-list-sticker {
+        left: 53vh;
     }
 }
 

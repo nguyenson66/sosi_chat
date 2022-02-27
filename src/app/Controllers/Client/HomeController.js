@@ -103,6 +103,7 @@ exports.chat = async (req, res) => {
                             user_name: 'You',
                             avatar: data_user.avatar,
                             content: message[i].content,
+                            type: message[i].type,
                             time: f_time[1],
                         };
                     } else {
@@ -115,6 +116,7 @@ exports.chat = async (req, res) => {
                             user_name: user.username,
                             avatar: user.avatar,
                             content: message[i].content,
+                            type: message[i].type,
                             time: f_time[1],
                         };
                     }
@@ -128,6 +130,7 @@ exports.chat = async (req, res) => {
                         user_id: message[i].user_id,
                         avatar: 'https://bit.ly/3Lxwgqe',
                         content: message[i].content,
+                        type: message[i].type,
                         time: f_time[1],
                     };
 

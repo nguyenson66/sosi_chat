@@ -7,6 +7,39 @@ var url = window.location.pathname.split('/');
 var room_id = url[url.length - 1];
 // console.log(room_id);
 
+/////////////////////
+var btnSticker = document.getElementById('btn-sticker');
+var btnImage = document.getElementById('btn-image');
+var showListSticker = document.getElementById('showListSticker');
+
+function eventTyping() {
+    let msg = document.getElementById('msg').value;
+    msg = msg.trim();
+    if (msg != '') {
+        // console.log(msg);
+    }
+}
+
+// When the user clicks anywhere outside of the showListSticker, close it
+window.onclick = (e) => {
+    if (e.target == btnSticker || e.target == showListSticker) {
+        showListSticker.style.display = 'block';
+    } else {
+        showListSticker.style.display = 'none';
+    }
+};
+
+// set event click sticker , send sticker to room
+function sendGif(id) {
+    socket.emit('messageChatRoom', {
+        room_id,
+        user_id,
+        user_name,
+        type: 'sticker',
+        msg: id,
+    });
+}
+
 // say to server user join room
 socket.emit('joinRoom', room_id);
 
@@ -25,6 +58,7 @@ chat_form.addEventListener('submit', (e) => {
         room_id,
         user_id,
         user_name,
+        type: 'text',
         msg,
     });
 
@@ -32,69 +66,58 @@ chat_form.addEventListener('submit', (e) => {
 });
 
 // listen and push message into box message
-socket.on('message', ({ user_id_s, user_name_s, msg_s, time, avatar }) => {
-    console.log(avatar);
+socket.on(
+    'message',
+    ({ user_id_s, user_name_s, msg_s, type, time, avatar }) => {
+        let userName = user_name_s;
+        let messageServer = `<span>${msg_s}<span>`;
 
-    //format time just get hh:mm
-    let f_time = time.split(' ');
-    f_time = f_time[1];
+        //format time just get hh:mm
+        let f_time = time.split(' ');
+        f_time = f_time[1];
 
-    const div = document.createElement('div');
-    div.classList.add('message');
-    if (user_id == user_id_s) div.classList.add('my-message');
+        // check type message and change value innerHTML
+        if (type === 'sticker') {
+            messageServer = `<img src="/gif/${msg_s}.gif" alt="${type}">`;
+        }
 
-    const box = document.createElement('div');
+        const div = document.createElement('div');
+        div.classList.add('message');
+        if (user_id == user_id_s) {
+            div.classList.add('my-message');
+            userName = 'You';
+        }
 
-    const message_user = document.createElement('div');
-    message_user.classList.add('message-user');
-    const img = document.createElement('img');
-    img.src = avatar;
-    img.alt = 'avatar';
-    const p_username = document.createElement('p');
+        const box = document.createElement('div');
 
-    if (user_id == user_id_s) {
-        p_username.innerText = 'You';
-    } else {
-        p_username.innerText = user_name_s;
+        box.innerHTML = `
+            <div>
+                <div class="message-user">
+                    <img
+                        src="${avatar}"
+                        alt="avatar"
+                    />
+                    <p>${userName}</p>
+                </div>
+
+                <div class="message-content">
+                    <div class="content ${type}-message">
+                        ${messageServer}
+                    </div>
+                    <div class="time-send">
+                        <span>${f_time}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        div.appendChild(box);
+
+        document.querySelector('.box-message').appendChild(div);
+
+        form_message.scrollTop = form_message.scrollHeight;
     }
-
-    message_user.appendChild(img);
-    message_user.appendChild(p_username);
-
-    //// content message and time send ////
-    const message_content = document.createElement('div');
-    message_content.classList.add('message-content');
-
-    /// content
-    const content = document.createElement('div');
-    content.classList.add('content');
-
-    const spanContent = document.createElement('span');
-    spanContent.innerText = msg_s;
-
-    content.appendChild(spanContent);
-
-    /// time send
-    const time_send = document.createElement('div');
-    time_send.classList.add('time-send');
-    const spanTime = document.createElement('span');
-    spanTime.innerText = f_time;
-    time_send.appendChild(spanTime);
-    ///
-
-    message_content.appendChild(content);
-    message_content.appendChild(time_send);
-    /////////////
-
-    box.appendChild(message_user);
-    box.appendChild(message_content);
-
-    div.appendChild(box);
-
-    document.querySelector('.box-message').appendChild(div);
-
-    form_message.scrollTop = form_message.scrollHeight;
-});
+);
 
 /*//////////////////////////////////////////////////////////////////// */
 // create room

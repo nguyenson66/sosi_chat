@@ -12,50 +12,55 @@ function socketIO(io) {
             socket.join(room_id);
         });
 
-        socket.on('messageChatRoom', ({ room_id, user_id, user_name, msg }) => {
-            // console.log({ room_id, user_id, user_name, msg });
+        socket.on(
+            'messageChatRoom',
+            ({ room_id, user_id, user_name, type, msg }) => {
+                // console.log({ room_id, user_id, user_name, msg });
 
-            const time = moment().format('DD/MM/YYYY hh:mm A');
-            // console.log(time)
+                const time = moment().format('DD/MM/YYYY hh:mm A');
+                // console.log(time)
 
-            let user_id_s = user_id,
-                user_name_s = user_name,
-                msg_s = msg,
-                avatar = 'https://bit.ly/3Lxwgqe';
+                let user_id_s = user_id,
+                    user_name_s = user_name,
+                    msg_s = msg,
+                    avatar = 'https://bit.ly/3Lxwgqe';
 
-            Room.findById(room_id)
-                .then(async (room) => {
-                    // set name user is 'stranger' if public_infor = 0
-                    const public_infor = room.public_infor;
-                    if (!public_infor) user_name_s = 'Người lạ';
-                    else {
-                        const data_user = await User.findById(user_id);
-                        avatar = data_user.avatar;
-                    }
+                Room.findById(room_id)
+                    .then(async (room) => {
+                        // set name user is 'stranger' if public_infor = 0
+                        const public_infor = room.public_infor;
+                        if (!public_infor) user_name_s = 'Người lạ';
+                        else {
+                            const data_user = await User.findById(user_id);
+                            avatar = data_user.avatar;
+                        }
 
-                    const message = new Message({
-                        room_id: room_id,
-                        user_id: user_id,
-                        content: msg,
-                        time: time,
+                        const message = new Message({
+                            room_id: room_id,
+                            user_id: user_id,
+                            content: msg,
+                            type,
+                            time: time,
+                        });
+
+                        // send message to all user in room
+                        io.to(room_id).emit('message', {
+                            user_id_s,
+                            user_name_s,
+                            msg_s,
+                            type,
+                            time,
+                            avatar,
+                        });
+
+                        // console.log(message)
+                        message.save();
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
                     });
-
-                    // send message to all user in room
-                    io.to(room_id).emit('message', {
-                        user_id_s,
-                        user_name_s,
-                        msg_s,
-                        time,
-                        avatar,
-                    });
-
-                    // console.log(message)
-                    message.save();
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                });
-        });
+            }
+        );
 
         /// new stranger room
         socket.on('new-stranger-room', (user_id) => {
