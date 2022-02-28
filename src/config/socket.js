@@ -2,6 +2,8 @@ const Room = require('../app/Models/Room');
 const Message = require('../app/Models/Message');
 const User = require('../app/Models/User');
 const moment = require('moment');
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
 
 function socketIO(io) {
     io.on('connection', function (socket) {
@@ -106,7 +108,11 @@ function socketIO(io) {
                         );
                         const room = new Room({
                             title: 'Trò chuyện cùng người lạ',
-                            list_user: [user_id, list_user_2[rd_user]._id],
+                            list_user: [
+                                user_id,
+                                list_user_2[rd_user]._id,
+                                '621cd6aaf36dd4349f838a08',
+                            ],
                             public_infor: false,
                             public_room: false,
                             avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/question_2_p4nifa.png',
@@ -136,7 +142,7 @@ function socketIO(io) {
             Room.create(
                 {
                     title: 'Nhóm chat vui vẻ <3',
-                    list_user: [user_id],
+                    list_user: [user_id, '621cd6aaf36dd4349f838a08'],
                     public_room: true,
                     public_infor: true,
                     avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png',
@@ -148,6 +154,79 @@ function socketIO(io) {
                     }
                 }
             );
+        });
+
+        /// add member to room
+        socket.on(
+            'addMembersToRoom',
+            async ({ user_name, emailMember, room_id }) => {
+                try {
+                    const user = await User.findOne({ email: emailMember });
+
+                    if (user) {
+                        let room = await Room.findById(room_id);
+
+                        if (room.list_user.includes(user._id)) {
+                            // send status add member event
+                            socket.emit('statusAddMembers', {
+                                statusAddMember: 300,
+                                msg: `Tài khoản ${user.username} đã có trong nhóm !!!`,
+                            });
+                            return;
+                        }
+
+                        room.list_user.push(user._id);
+                        room.save();
+
+                        // send status add member event
+                        socket.emit('statusAddMembers', {
+                            statusAddMember: 200,
+                            msg: `Đã thêm ${user.username} vào nhóm thành công !!!`,
+                        });
+
+                        const time = moment().format('DD/MM/YYYY hh:mm A');
+                        //BOT send message to the room
+                        io.to(room_id).emit('message', {
+                            user_id_s: '621cd6aaf36dd4349f838a08',
+                            user_name_s: 'BOT',
+                            msg_s: `'${user_name}' đã thêm '${user.username}' vào nhóm`,
+                            type: 'text',
+                            time,
+                            avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
+                        });
+
+                        const message = new Message({
+                            room_id: room_id,
+                            user_id: '621cd6aaf36dd4349f838a08',
+                            content: `${user_name} đã thêm ${user.username} vào nhóm`,
+                            type: 'text',
+                            time,
+                        });
+
+                        message.save();
+                    } else {
+                        // send status add member event
+                        socket.emit('statusAddMembers', {
+                            statusAddMember: 404,
+                            msg: `Không tìm thấy tài khoản có địa chỉ email là ${emailMember}`,
+                        });
+                    }
+                } catch (error) {
+                    console.log(error);
+                    // send status add member event
+                    socket.emit('statusAddMembers', {
+                        statusAddMember: 500,
+                        msg: `Server đang quá tải vui lòng thử lại sau vài phút !!`,
+                    });
+                }
+            }
+        );
+
+        //////////////////// Event emitter ///////////////////
+
+        //user out room
+        eventEmitter.on('userOutRoom', (username, roomId) => {
+            console.log(username, roomId);
         });
 
         socket.on('disconnect', () => {});

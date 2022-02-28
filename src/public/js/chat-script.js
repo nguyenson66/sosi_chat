@@ -12,6 +12,7 @@ var btnSticker = document.getElementById('btn-sticker');
 var btnImage = document.getElementById('btn-image');
 var showListSticker = document.getElementById('showListSticker');
 
+/////////////////////////////////// SOCKET  /////////////////////////////////////////////////////
 function eventTyping() {
     let msg = document.getElementById('msg').value;
     msg = msg.trim();
@@ -126,28 +127,58 @@ socket.on(
     }
 );
 
-/*//////////////////////////////////////////////////////////////////// */
-// create room
+//event add member to the room as email
+function addMembers() {
+    let emailMember = document.getElementById('add-members').value;
+    emailMember = emailMember.trim();
 
-const form_redirect = document.forms['form-redirect'];
+    if (emailMember === '') {
+        return;
+    } else {
+        document.getElementById('add-members').value = '';
+        socket.emit('addMembersToRoom', { user_name, emailMember, room_id });
+    }
+}
 
-$('#new-stranger-room').click(() => {
-    socket.emit('new-stranger-room', '<%- user._id %>');
-    alert('Đang tìm đối tượng thích hợp cho bạn vui lòng đợi trong giây lát');
-
-    // listen event successfull pairing
-    socket.on('successfull-pairing', (room_id) => {
-        form_redirect.action = '/c/' + room_id;
-        form_redirect.submit();
-    });
+//listen status add member event
+socket.on('statusAddMembers', ({ statusAddMember, msg }) => {
+    if (statusAddMember === 200) {
+        showToast({
+            type: 'success',
+            title: 'Thành công',
+            icon: 'far fa-check-circle',
+            message: msg,
+        });
+    } else if (statusAddMember === 300) {
+        showToast({
+            type: 'info',
+            title: 'Thất bại',
+            icon: 'fas fa-info-circle',
+            message: msg,
+        });
+    } else {
+        showToast({
+            type: 'error',
+            title: 'Thất bại',
+            icon: 'far fa-times-circle',
+            message: msg,
+        });
+    }
 });
 
-$('#new-group').click(() => {
-    socket.emit('new-group-chat', '<%- user._id %>');
-    alert(`Tạo phòng trò chuyện thành công bấm 'ok' để chuyển hướng`);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    socket.on('redirect-group-chat', (room_id) => {
-        form_redirect.action = '/c/' + room_id;
-        form_redirect.submit();
+const joinRoom = document.getElementById('linkJoinRoom');
+const linkJoinRoom = document.domain + '/j/' + room_id;
+
+joinRoom.innerText = linkJoinRoom;
+
+function copyTextToClipboard() {
+    navigator.clipboard.writeText(linkJoinRoom);
+    showToast({
+        type: 'success',
+        title: 'Thành công',
+        icon: 'far fa-check-circle',
+        message: 'Đã copy liên kết tham gia nhóm chat !!!',
     });
-});
+}

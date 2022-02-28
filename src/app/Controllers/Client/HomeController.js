@@ -4,6 +4,8 @@ const Crypto = require('crypto-js');
 const User = require('../../Models/User');
 const Room = require('../../Models/Room');
 const Message = require('../../Models/Message');
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
 
 //[GET] /introduce
 exports.introduce = (req, res) => {
@@ -144,6 +146,7 @@ exports.chat = async (req, res) => {
 
             res.render('client/chat', {
                 title: room.title,
+                room_id: room._id,
                 user: {
                     _id: data_user._id,
                     username: data_user.username,
@@ -158,11 +161,40 @@ exports.chat = async (req, res) => {
             //     list_room,
             // });
         } else {
-            res.redirect('/home');
+            res.redirect('/');
         }
     } catch (error) {
         console.log(error);
-        res.redirect('/home');
+        res.redirect('/');
+    }
+};
+
+//[GET] /out/:id
+exports.outRoom = async (req, res) => {
+    const roomId = req.params.id;
+    const userId = req.body.user._id;
+
+    try {
+        await Message.deleteMany({
+            room_id: roomId,
+            user_id: userId,
+        });
+
+        let room = await Room.findById(roomId);
+
+        room.list_user = room.list_user.filter((ele) => {
+            return ele != userId;
+        });
+
+        room.save();
+
+        //// event emitter user out room
+        eventEmitter.emit('userOutRoom', req.body.user.username, roomId);
+
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+        res.redirect('/');
     }
 };
 

@@ -49,6 +49,7 @@ body {
 }
 
 .conversation-information {
+    max-height: 70px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -65,10 +66,62 @@ body {
     -webkit-box-orient: vertical;
 }
 
+.conversation-option {
+    position: relative;
+    display: inline-block;
+}
+
 .conversation-option img {
     height: 30px;
     width: auto;
+    cursor: pointer;
 }
+
+.list-option {
+    display: none;
+    position: absolute;
+    border-radius: 10px;
+    padding: 6px 0;
+    right: 0;
+    width: 350px;
+    background-color: #fff;
+    box-shadow: 0px 2px 3px 0px rgb(165, 165, 165);
+}
+
+.conversation-option:hover .list-option {
+    display: block;
+}
+
+.option-content {
+    padding: 4px 10px;
+    border-bottom: solid 0.5px rgb(151, 151, 151);
+}
+
+.option-content i {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.option-content i:active {
+    transform: translateY(1px);
+}
+
+.option-content input {
+    padding: 3px;
+    width: 250px;
+}
+
+.option-content a {
+    text-decoration: none;
+    color: rgb(253, 95, 95);
+}
+
+.conversation a:hover {
+    text-decoration: none;
+    color: rgb(253, 95, 95);
+}
+
+/* /// */
 
 .name-conversation {
     display: flex;

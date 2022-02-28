@@ -47,7 +47,36 @@
                         <img
                             src="https://res.cloudinary.com/soicondibui/image/upload/v1642672221/sosichat/icon/i_m7xyhw.png"
                             alt="img"
+                            draggable="false"
+                            id="dropdownMenuButton"
                         />
+                        <div class="list-option" id="list-option">
+                            <div class="option-content">
+                                <h6>Link tham gia nhóm :</h6>
+                                <span id="linkJoinRoom"></span>
+                                <i
+                                    class="far fa-copy"
+                                    onclick="copyTextToClipboard()"
+                                ></i>
+                            </div>
+                            <div class="option-content">
+                                <h6>
+                                    Mời thêm thành viên (bằng địa chỉ email):
+                                </h6>
+                                <input
+                                    id="add-members"
+                                    type="text"
+                                    placeholder="VD : sositech@gmail.com"
+                                />
+                                <i
+                                    class="fas fa-user-plus"
+                                    onclick="addMembers()"
+                                ></i>
+                            </div>
+                            <div class="option-content">
+                                <a href="/out/<%- room_id %>">Rời khỏi nhóm</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
