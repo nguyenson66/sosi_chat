@@ -73,6 +73,8 @@
                                     <img
                                         src="/gif/<%- message[i].content %>.gif"
                                         alt="<%- message[i].type %>"
+                                        draggable="false"
+                                        onmouseover="overSticker(this)"
                                     />
                                     <% } else if(message[i].type == 'image') {%>
                                     <img
@@ -109,11 +111,14 @@
                                     <img
                                         src="/gif/<%- message[i].content %>.gif"
                                         alt="<%- message[i].type %>"
+                                        draggable="false"
+                                        onmouseover="overSticker(this)"
                                     />
                                     <% } else if(message[i].type == 'image') {%>
                                     <img
                                         src="<%- message[i].content %>"
                                         alt="<%- message[i].type %>"
+                                        draggable="false"
                                     />
                                     <% } else { %>
                                     <span><%- message[i].content %></span>
@@ -136,6 +141,8 @@
                                 src="/gif/<%- i %>.gif"
                                 alt="sticker"
                                 onclick="sendGif('<%- i %>')"
+                                draggable="false"
+                                onmouseover="overSticker(this)"
                             />
                         </div>
                         <% } %>

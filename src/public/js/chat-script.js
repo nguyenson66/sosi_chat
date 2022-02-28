@@ -29,6 +29,13 @@ window.onclick = (e) => {
     }
 };
 
+// hover event sticker
+function overSticker(x) {
+    const srcLink = x.src;
+
+    x.src = srcLink;
+}
+
 // set event click sticker , send sticker to room
 function sendGif(id) {
     socket.emit('messageChatRoom', {
