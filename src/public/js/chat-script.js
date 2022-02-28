@@ -85,7 +85,7 @@ socket.on(
 
         // check type message and change value innerHTML
         if (type === 'sticker') {
-            messageServer = `<img src="/gif/${msg_s}.gif" alt="${type}"> draggable="false" onmouseover="overSticker(this)"`;
+            messageServer = `<img src="/gif/${msg_s}.gif" alt="${type}" draggable="false" onmouseover="overSticker(this)" >`;
         }
 
         const div = document.createElement('div');
