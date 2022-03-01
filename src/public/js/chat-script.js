@@ -1,5 +1,6 @@
 var chat_form = document.getElementById('chat-form');
 var form_message = document.querySelector('.box-message');
+const typingAnimation = document.getElementById('typing-animation');
 form_message.scrollTop = form_message.scrollHeight;
 
 var socket = io();
@@ -13,13 +14,51 @@ var btnImage = document.getElementById('btn-image');
 var showListSticker = document.getElementById('showListSticker');
 
 /////////////////////////////////// SOCKET  /////////////////////////////////////////////////////
+var typing = false;
+var timeout = undefined;
+
+//listen typing message event
 function eventTyping() {
     let msg = document.getElementById('msg').value;
     msg = msg.trim();
-    if (msg != '') {
-        // console.log(msg);
+    if (msg != '' && typing == false) {
+        typing = true;
+
+        console.log('typing');
+        socket.emit('typingMessage', {
+            room_id,
+            typing: true,
+        });
+
+        timeout = setTimeout(() => {
+            typing = false;
+            socket.emit('typingMessage', {
+                room_id,
+                typing: false,
+            });
+        }, 5000);
+    } else if (msg == '' && typing == true) {
+        socket.emit('typingMessage', {
+            room_id,
+            typing: false,
+        });
+
+        typing = false;
+        clearTimeout(timeout);
     }
 }
+
+socket.on('typingMessage', ({ typingServer }) => {
+    console.log('server res : ' + typingServer);
+
+    if (typingServer == true) {
+        typingAnimation.style.display = 'flex';
+        typing = true;
+    } else {
+        typingAnimation.style.display = 'none';
+        typing = false;
+    }
+});
 
 // When the user clicks anywhere outside of the showListSticker, close it
 window.onclick = (e) => {
@@ -166,10 +205,34 @@ socket.on('statusAddMembers', ({ statusAddMember, msg }) => {
     }
 });
 
+////// change title room ///////
+const titleRoom = document.getElementById('title-room');
+const newTitleRoom = document.getElementById('new-title-room');
+
+function changeTitleRoom() {
+    let title = newTitleRoom.value.trim();
+
+    if (title != '') {
+        socket.emit('changeTitleRoom', {
+            user_name,
+            title,
+            room_id,
+        });
+
+        newTitleRoom.value = '';
+    }
+}
+
+socket.on('statusChangeTitleRoom', ({ title }) => {
+    titleRoom.innerText = title;
+    document.getElementById(`room-${room_id}`).innerText = title;
+    document.title = title;
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const joinRoom = document.getElementById('linkJoinRoom');
-const linkJoinRoom = document.domain + '/j/' + room_id;
+const linkJoinRoom = window.location.hostname + '/j/' + room_id;
 
 joinRoom.innerText = linkJoinRoom;
 

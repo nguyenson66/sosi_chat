@@ -78,6 +78,13 @@ exports.myProfile = (req, res) => {
     });
 };
 
+//[GET] /logout
+exports.logout = (req, res) => {
+    res.cookie('user_cookie', '', { maxAge: 0 });
+
+    res.redirect('/introduce');
+};
+
 /////////////////////////////////// POST ///////////////////////////////////////
 //[POST] /login
 exports.loginPOST = async (req, res) => {

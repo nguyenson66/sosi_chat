@@ -5,7 +5,22 @@
                 <img
                     src="https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/user_h0cglb.png"
                     alt="avatar"
+                    draggable="false"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
                 />
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="just-mini-screen">
+                        <a class="dropdown-item" onclick="newStranger()">Nhắn tin với người lạ</a>
+                    </div>
+                    <div class="just-mini-screen">
+                        <a class="dropdown-item" onclick="newGroup()">Tạo nhóm trò chuyện</a>
+                    </div>
+                    <a href="/my-profile" class="dropdown-item">Thông tin cá nhân</a>
+                    <a href="/logout" class="dropdown-item" style="color: rgb(255, 108, 108);">Đăng xuất</a>
+                </div>
             </div>
     
             <h2>Chat</h2>
@@ -23,11 +38,11 @@
         <% for(let i=0;i<list_room.length;i++) { %> 
                 <div class="room-information" onclick="redirectRoom('/c/<%- list_room[i]._id %>')">
                     <div class="avatar-room">
-                        <img src="<%- list_room[i].avatar %>" alt="room" />
+                        <img src="<%- list_room[i].avatar %>" draggable="false" alt="room" />
                     </div>
                     
                     <div class="content-room">
-                            <h6><%- list_room[i].title %></h6>
+                            <h6 id="room-<%- list_room[i]._id %>"><%- list_room[i].title %></h6>
                             <p>BOT : Chúc các bạn trò chuyện vui vẻ</p>
                         </div>
                 </div>
@@ -38,6 +53,7 @@
         <img
             src="https://res.cloudinary.com/soicondibui/image/upload/v1642669694/sosichat/icon/error_juzubm.png"
             alt="error"
+            draggable="false"
         />
         <h6>Report - Báo lỗi</h6>
     </div>

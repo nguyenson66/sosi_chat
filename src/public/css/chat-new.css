@@ -93,12 +93,11 @@ body {
 }
 
 .option-content {
-    padding: 4px 10px;
+    padding: 10px;
     border-bottom: solid 0.5px rgb(151, 151, 151);
 }
 
 .option-content i {
-    margin-left: 10px;
     cursor: pointer;
 }
 
@@ -114,6 +113,12 @@ body {
 .option-content a {
     text-decoration: none;
     color: rgb(253, 95, 95);
+}
+
+.option-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .conversation a:hover {
@@ -144,6 +149,7 @@ body {
 .box-message {
     height: 100%;
     overflow-y: scroll;
+    position: relative;
 }
 
 .message {
@@ -215,6 +221,47 @@ body {
 
 .time-send {
     font-size: 13px;
+}
+
+.typing-animation {
+    display: none;
+    background-color: #fff;
+    width: fit-content;
+    padding: 2px 20px;
+    border-top-right-radius: 5px;
+    font-size: 14px;
+    position: fixed;
+    bottom: 78px;
+}
+
+.loading {
+    margin-left: 10px;
+}
+
+.loading span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ffd957;
+    display: inline-block;
+    animation: dots 2s infinite ease-in-out;
+}
+
+.loading span:nth-child(2) {
+    background-color: #57ffa0;
+    animation-delay: 0.4s;
+}
+
+.loading span:nth-child(3) {
+    background-color: #ff8b57;
+    animation-delay: 0.8s;
+}
+
+@keyframes dots {
+    50% {
+        opacity: 0;
+        transform: scale(0.7) translateY(10px);
+    }
 }
 
 /* ////// show list sticker ,box send message and chat bar */
@@ -490,6 +537,10 @@ body {
 
     .show-list-sticker {
         left: 53vh;
+    }
+
+    .just-mini-screen {
+        display: none;
     }
 }
 

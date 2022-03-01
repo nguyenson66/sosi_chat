@@ -2,8 +2,8 @@ const Room = require('../app/Models/Room');
 const Message = require('../app/Models/Message');
 const User = require('../app/Models/User');
 const moment = require('moment');
-const EventEmitter = require('events');
-const eventEmitter = new EventEmitter();
+const events = require('../app/Middleware/EventEmitter');
+const botAI = require('../app/Middleware/BOT');
 
 function socketIO(io) {
     io.on('connection', function (socket) {
@@ -19,7 +19,9 @@ function socketIO(io) {
             ({ room_id, user_id, user_name, type, msg }) => {
                 // console.log({ room_id, user_id, user_name, msg });
 
-                const time = moment().format('DD/MM/YYYY hh:mm A');
+                const time = moment()
+                    .utcOffset(420)
+                    .format('YYYY/MM/DD hh:mm A');
                 // console.log(time)
 
                 let user_id_s = user_id,
@@ -55,8 +57,23 @@ function socketIO(io) {
                             avatar,
                         });
 
+                        io.to(room_id).emit('typingMessage', {
+                            typingServer: false,
+                        });
+
                         // console.log(message)
                         message.save();
+
+                        //////////////////// MESSAGE BOT /////////////////
+                        if (msg.substring(0, 4) == '!bot') {
+                            botAI.messageProcessing(
+                                msg
+                                    .toLowerCase()
+                                    .substring(4, msg.length)
+                                    .trim()
+                            );
+                        }
+                        /////////////////////////////////////////////////
                     })
                     .catch((err) => {
                         console.log(err.message);
@@ -184,7 +201,9 @@ function socketIO(io) {
                             msg: `Đã thêm ${user.username} vào nhóm thành công !!!`,
                         });
 
-                        const time = moment().format('DD/MM/YYYY hh:mm A');
+                        const time = moment()
+                            .utcOffset(420)
+                            .format('YYYY/MM/DD hh:mm A');
                         //BOT send message to the room
                         io.to(room_id).emit('message', {
                             user_id_s: '621cd6aaf36dd4349f838a08',
@@ -222,14 +241,81 @@ function socketIO(io) {
             }
         );
 
-        //////////////////// Event emitter ///////////////////
+        // event change title room
+        socket.on('changeTitleRoom', async ({ user_name, title, room_id }) => {
+            try {
+                let room = await Room.findById(room_id);
+                room.title = title;
+                room.save();
 
-        //user out room
-        eventEmitter.on('userOutRoom', (username, roomId) => {
-            console.log(username, roomId);
+                const time = moment()
+                    .utcOffset(420)
+                    .format('YYYY/MM/DD hh:mm A');
+                //BOT send message to the room/////
+                io.to(room_id).emit('message', {
+                    user_id_s: '621cd6aaf36dd4349f838a08',
+                    user_name_s: 'BOT',
+                    msg_s: `'${user_name}' đã thay đổi tên của nhóm`,
+                    type: 'text',
+                    time,
+                    avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
+                });
+
+                const message = new Message({
+                    room_id: room_id,
+                    user_id: '621cd6aaf36dd4349f838a08',
+                    content: `${user_name} đã thay đổi tên của nhóm`,
+                    type: 'text',
+                    time,
+                });
+
+                message.save();
+                ////////////////////////////////////
+
+                io.to(room_id).emit('statusChangeTitleRoom', {
+                    title,
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        //listen typing message event
+        socket.on('typingMessage', ({ room_id, typing }) => {
+            const typingServer = typing;
+
+            io.to(room_id).emit('typingMessage', {
+                typingServer,
+            });
         });
 
         socket.on('disconnect', () => {});
+    });
+
+    //////////////////// Event emitter ///////////////////
+
+    //user out room
+    events.on('userOutRoom', (username, roomId) => {
+        const time = moment().utcOffset(420).format('YYYY/MM/DD hh:mm A');
+        //BOT send message to the room
+        io.to(roomId).emit('message', {
+            user_id_s: '621cd6aaf36dd4349f838a08',
+            user_name_s: 'BOT',
+            msg_s: `'${username}' đã rời khỏi nhóm. Mọi tin nhắn của ${username} sẽ bị xóa vui lòng làm mới lại trang`,
+            type: 'text',
+            time,
+            avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
+        });
+
+        const message = new Message({
+            room_id: roomId,
+            user_id: '621cd6aaf36dd4349f838a08',
+            content: `'${username}' đã rời khỏi nhóm. Mọi tin nhắn của ${username} sẽ bị xóa vui lòng làm mới lại trang`,
+            type: 'text',
+            time,
+        });
+
+        message.save();
     });
 }
 

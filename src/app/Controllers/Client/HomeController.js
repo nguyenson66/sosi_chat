@@ -4,8 +4,7 @@ const Crypto = require('crypto-js');
 const User = require('../../Models/User');
 const Room = require('../../Models/Room');
 const Message = require('../../Models/Message');
-const EventEmitter = require('events');
-const eventEmitter = new EventEmitter();
+const events = require('../../Middleware/EventEmitter');
 
 //[GET] /introduce
 exports.introduce = (req, res) => {
@@ -42,6 +41,7 @@ exports.joinRoom = async (req, res) => {
     const user = req.body.user;
 
     const room_id = req.params.id;
+
     Room.findById(room_id)
         .then((room) => {
             if (room.public_room) {
@@ -188,8 +188,7 @@ exports.outRoom = async (req, res) => {
 
         room.save();
 
-        //// event emitter user out room
-        eventEmitter.emit('userOutRoom', req.body.user.username, roomId);
+        events.emit('userOutRoom', req.body.user.username, roomId);
 
         res.redirect('/');
     } catch (error) {

@@ -40,7 +40,7 @@
                             alt="image"
                         />
 
-                        <h3><%- title %></h3>
+                        <h3 id="title-room"><%- title %></h3>
                     </div>
 
                     <div class="conversation-option">
@@ -52,28 +52,46 @@
                         />
                         <div class="list-option" id="list-option">
                             <div class="option-content">
+                                <h6>Đổi tên nhóm :</h6>
+                                <div class="option-layout">
+                                    <input
+                                        id="new-title-room"
+                                        type="text"
+                                        placeholder="VD : Nhóm chat vui vẻ"
+                                    />
+                                    <i
+                                        class="fa-solid fa-wrench"
+                                        onclick="changeTitleRoom()"
+                                    ></i>
+                                </div>
+                            </div>
+                            <div class="option-content">
                                 <h6>Link tham gia nhóm :</h6>
-                                <span id="linkJoinRoom"></span>
-                                <i
-                                    class="far fa-copy"
-                                    onclick="copyTextToClipboard()"
-                                ></i>
+                                <div class="option-layout">
+                                    <span id="linkJoinRoom"></span>
+                                    <i
+                                        class="far fa-copy"
+                                        onclick="copyTextToClipboard()"
+                                    ></i>
+                                </div>
                             </div>
                             <div class="option-content">
                                 <h6>
                                     Mời thêm thành viên (bằng địa chỉ email):
                                 </h6>
-                                <input
-                                    id="add-members"
-                                    type="text"
-                                    placeholder="VD : sositech@gmail.com"
-                                />
-                                <i
-                                    class="fas fa-user-plus"
-                                    onclick="addMembers()"
-                                ></i>
+                                <div class="option-layout">
+                                    <input
+                                        id="add-members"
+                                        type="text"
+                                        placeholder="VD : sositech@gmail.com"
+                                    />
+                                    <i
+                                        class="fas fa-user-plus"
+                                        onclick="addMembers()"
+                                    ></i>
+                                </div>
                             </div>
-                            <div class="option-content">
+                            <div class="option-content" style="border: none">
                                 <a href="/out/<%- room_id %>">Rời khỏi nhóm</a>
                             </div>
                         </div>
@@ -160,6 +178,15 @@
                         </div>
                     </div>
                     <% } %> <% } %>
+
+                    <div id="typing-animation" class="typing-animation">
+                        <span>Ai đó đang nhập</span>
+                        <div class="loading">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="show-list-sticker" id="showListSticker">
