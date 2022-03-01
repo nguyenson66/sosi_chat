@@ -49,8 +49,6 @@ function eventTyping() {
 }
 
 socket.on('typingMessage', ({ typingServer }) => {
-    console.log('server res : ' + typingServer);
-
     if (typingServer == true) {
         typingAnimation.style.display = 'flex';
         typing = true;
@@ -236,12 +234,17 @@ const linkJoinRoom = window.location.hostname + '/j/' + room_id;
 
 joinRoom.innerText = linkJoinRoom;
 
-function copyTextToClipboard() {
-    navigator.clipboard.writeText(linkJoinRoom);
-    showToast({
-        type: 'success',
-        title: 'Thành công',
-        icon: 'far fa-check-circle',
-        message: 'Đã copy liên kết tham gia nhóm chat !!!',
-    });
+async function copyTextToClipboard() {
+    console.log(linkJoinRoom);
+    try {
+        await navigator.clipboard.writeText(linkJoinRoom);
+        showToast({
+            type: 'success',
+            title: 'Thành công',
+            icon: 'far fa-check-circle',
+            message: 'Đã copy liên kết tham gia nhóm chat !!!',
+        });
+    } catch (error) {
+        console.error('Failed to copy : ', error);
+    }
 }
