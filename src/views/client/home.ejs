@@ -115,18 +115,26 @@
 
         <script>
             //infor user
-            var user_id = '<%- user._id%>';
-            var user_name = '<%- user.username %>';
+            var user_id = '<%- data_user._id%>';
+            var user_name = '<%- data_user.username %>';
+
+            // list id room
+            var list_room_id = '<%- list_id_room %>';
+
+            //socket
+            let socket = io();
 
             // event click room
             function redirectRoom(id) {
                 window.location.href = id;
             }
 
-            ////// socket ///////
-            let socket = io();
+            ///// get url
+            var url = window.location.pathname.split('/');
+            var room_id = url[url.length - 1];
         </script>
 
         <script src="/js/createRoom.js"></script>
+        <script src="/js/infor-user-room.js"></script>
     </body>
 </html>

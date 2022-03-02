@@ -1,10 +1,9 @@
 const path = require('path');
-const jwt = require('jsonwebtoken');
 const Crypto = require('crypto-js');
-const User = require('../../Models/User');
 const Room = require('../../Models/Room');
-const Message = require('../../Models/Message');
 const events = require('../../Middleware/EventEmitter');
+const asyncWrapper = require('../../Middleware/asyncWrapper');
+const getMessage_Room = require('../../Middleware/getMessage_Room');
 
 //[GET] /introduce
 exports.introduce = (req, res) => {
@@ -12,189 +11,104 @@ exports.introduce = (req, res) => {
 };
 
 //[GET] /
-exports.home = (req, res) => {
-    const user = req.body.user;
+exports.home = asyncWrapper(async (req, res) => {
+    const data_user = req.body.user;
     let completed_user = true;
 
-    if (user.sex == undefined) {
+    if (data_user.sex == undefined) {
         completed_user = false;
     }
 
-    Room.find({ list_user: user._id })
-        .then(function (room) {
-            res.render('client/home', {
-                user: {
-                    _id: user._id,
-                    user_name: user.username,
-                    avatar: user.avatar,
-                },
-                title: 'Sosichat.tech',
-                list_room: room,
-                completed_user,
-            });
-        })
-        .catch((err) => console.log(err.message));
-};
+    // get list room of user
+    let list_room = await Room.find({ list_user: data_user._id });
+    list_room = await getMessage_Room.getInforRoom(list_room, data_user._id);
+
+    res.render('client/home', {
+        data_user,
+        title: 'Sosichat.tech',
+        list_room,
+        completed_user,
+        list_id_room: list_room.map((x) => x._id),
+    });
+});
 
 //[GET] /j/:id
-exports.joinRoom = async (req, res) => {
+exports.joinRoom = asyncWrapper(async (req, res) => {
     const user = req.body.user;
 
     const room_id = req.params.id;
 
-    Room.findById(room_id)
-        .then((room) => {
-            if (room.public_room) {
-                //check already exits in the group
-                if (!room.list_user.includes(user._id)) {
-                    room.list_user.push(user._id);
-                    room.save();
-                }
+    const room = await Room.findById(room_id);
 
-                // redirect room
-                res.redirect('/c/' + room_id);
-            } else {
-                res.redirect('/');
-            }
-        })
-        .catch((err) => {
-            console.log(err.message);
+    if (room.public_room) {
+        if (!room.list_user.includes(user._id)) {
+            room.list_user.push(user._id);
+            await room.save();
 
-            //render view 404
-            res.redirect('/');
-        });
-};
+            events.emit('userJoinRoom', {
+                username: user.username,
+                roomId: room_id,
+            });
+        }
+
+        res.redirect('/c/' + room_id);
+    } else {
+        res.status(404).sendFile(
+            path.join(__dirname, '../../../views/404.html')
+        );
+    }
+});
 
 //[GET] /c/:id
-exports.chat = async (req, res) => {
+exports.chat = asyncWrapper(async (req, res) => {
     const room_id = req.params.id;
     const data_user = req.body.user;
 
-    try {
-        // find room chat by id
-        let room = await Room.findById(room_id);
+    const data_room = await Room.findById(room_id);
 
-        // check user already exists in room
-        if (room.list_user.includes(data_user._id)) {
-            var message = await Message.find({ room_id: room._id });
+    //check user exists in the room
+    if (!data_room.list_user.includes(data_user._id)) {
+        //if user doesn't exist in the room, user will see 404 not found
+        res.status(404).sendFile(
+            path.join(__dirname, '../../../views/404.html')
+        );
+    } else {
+        // get list room of user
+        let list_room = await Room.find({ list_user: data_user._id });
+        list_room = await getMessage_Room.getInforRoom(
+            list_room,
+            data_user._id
+        );
 
-            // find all room user already exists in room
-            const list_room = await Room.find({
-                list_user: data_user._id,
-            }).select('title avatar');
+        /// get message in the room
+        let message = await getMessage_Room.getMessage(data_room, 0);
 
-            // if user public information get title room is username stranger and get avatar
-            if (room.public_infor) {
-                let stranger = room.list_user.filter(
-                    (item) => item != data_user._id
-                );
-
-                for (let i = 0; i < stranger.length; i++) {
-                    stranger[i] = await User.findById(stranger[i]).select(
-                        'username avatar'
-                    );
-                }
-
-                for (let i = 0; i < message.length; i++) {
-                    // format time
-                    const f_time = message[i].time.split(' ');
-
-                    if (message[i].user_id == data_user._id) {
-                        message[i] = {
-                            user_id: message[i].user_id,
-                            user_name: 'You',
-                            avatar: data_user.avatar,
-                            content: message[i].content,
-                            type: message[i].type,
-                            time: f_time[1],
-                        };
-                    } else {
-                        const user = stranger.find(
-                            (user) => user._id == message[i].user_id
-                        );
-
-                        message[i] = {
-                            user_id: message[i].user_id,
-                            user_name: user.username,
-                            avatar: user.avatar,
-                            content: message[i].content,
-                            type: message[i].type,
-                            time: f_time[1],
-                        };
-                    }
-                }
-            } else {
-                for (let i = 0; i < message.length; i++) {
-                    //format time
-                    const f_time = message[i].time.split(' ');
-
-                    message[i] = {
-                        user_id: message[i].user_id,
-                        avatar: 'https://bit.ly/3Lxwgqe',
-                        content: message[i].content,
-                        type: message[i].type,
-                        time: f_time[1],
-                    };
-
-                    if (message[i].user_id == data_user._id) {
-                        message[i].user_name = 'You';
-                    } else {
-                        message[i].user_name = 'Người lạ';
-                    }
-                }
-            }
-
-            res.render('client/chat', {
-                title: room.title,
-                room_id: room._id,
-                user: {
-                    _id: data_user._id,
-                    username: data_user.username,
-                },
-                message,
-                list_room,
-            });
-            // res.json({
-            //     title: room.title,
-            // user_id: data_user._id,
-            //     message,
-            //     list_room,
-            // });
-        } else {
-            res.redirect('/');
-        }
-    } catch (error) {
-        console.log(error);
-        res.redirect('/');
+        res.render('client/chat', {
+            data_room,
+            user: data_user,
+            message,
+            list_room,
+            list_id_room: list_room.map((x) => x._id),
+        });
     }
-};
+});
 
 //[GET] /out/:id
-exports.outRoom = async (req, res) => {
+exports.outRoom = asyncWrapper(async (req, res) => {
     const roomId = req.params.id;
     const userId = req.body.user._id;
 
-    try {
-        await Message.deleteMany({
-            room_id: roomId,
-            user_id: userId,
-        });
+    let room = await Room.findById(roomId);
 
-        let room = await Room.findById(roomId);
+    room.list_user = room.list_user.filter((ele) => {
+        return ele != userId;
+    });
 
-        room.list_user = room.list_user.filter((ele) => {
-            return ele != userId;
-        });
+    await room.save();
 
-        room.save();
+    events.emit('userOutRoom', req.body.user.username, roomId);
 
-        events.emit('userOutRoom', req.body.user.username, roomId);
-
-        res.redirect('/');
-    } catch (error) {
-        console.log(error);
-        res.redirect('/');
-    }
-};
+    res.redirect('/');
+});
 
 /////////////////////////////////// POST ///////////////////////////////////////

@@ -3,17 +3,14 @@ var form_message = document.querySelector('.box-message');
 const typingAnimation = document.getElementById('typing-animation');
 form_message.scrollTop = form_message.scrollHeight;
 
-var socket = io();
-var url = window.location.pathname.split('/');
-var room_id = url[url.length - 1];
-// console.log(room_id);
-
 /////////////////////
 var btnSticker = document.getElementById('btn-sticker');
 var btnImage = document.getElementById('btn-image');
 var showListSticker = document.getElementById('showListSticker');
 
 /////////////////////////////////// SOCKET  /////////////////////////////////////////////////////
+////// socket ///////
+
 var typing = false;
 var timeout = undefined;
 
@@ -24,7 +21,6 @@ function eventTyping() {
     if (msg != '' && typing == false) {
         typing = true;
 
-        console.log('typing');
         socket.emit('typingMessage', {
             room_id,
             typing: true,
@@ -48,13 +44,16 @@ function eventTyping() {
     }
 }
 
-socket.on('typingMessage', ({ typingServer }) => {
-    if (typingServer == true) {
-        typingAnimation.style.display = 'flex';
-        typing = true;
-    } else {
-        typingAnimation.style.display = 'none';
-        typing = false;
+socket.on('typingMessage', ({ currentRoomId, typingServer }) => {
+    // check the current chat room
+    if (currentRoomId == room_id) {
+        if (typingServer == true) {
+            typingAnimation.style.display = 'flex';
+            typing = true;
+        } else {
+            typingAnimation.style.display = 'none';
+            typing = false;
+        }
     }
 });
 
@@ -85,9 +84,6 @@ function sendGif(id) {
     });
 }
 
-// say to server user join room
-socket.emit('joinRoom', room_id);
-
 // event send message
 chat_form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -113,29 +109,31 @@ chat_form.addEventListener('submit', (e) => {
 // listen and push message into box message
 socket.on(
     'message',
-    ({ user_id_s, user_name_s, msg_s, type, time, avatar }) => {
-        let userName = user_name_s;
-        let messageServer = `<span>${msg_s}<span>`;
+    ({ room_id, user_id_s, user_name_s, msg, type, time, avatar }) => {
+        // check the current chat room
+        if (url[url.length - 1] == room_id) {
+            let userName = user_name_s;
+            let messageServer = `<span>${msg}<span>`;
 
-        //format time just get hh:mm
-        let f_time = time.split(' ');
-        f_time = f_time[1];
+            //format time just get hh:mm
+            let f_time = time.split(' ');
+            f_time = f_time[1].substring(0, 5);
 
-        // check type message and change value innerHTML
-        if (type === 'sticker') {
-            messageServer = `<img src="/gif/${msg_s}.gif" alt="${type}" draggable="false" onmouseover="overSticker(this)" >`;
-        }
+            // check type message and change value innerHTML
+            if (type === 'sticker') {
+                messageServer = `<img src="/gif/${msg}.gif" alt="${type}" draggable="false" onmouseover="overSticker(this)" >`;
+            }
 
-        const div = document.createElement('div');
-        div.classList.add('message');
-        if (user_id == user_id_s) {
-            div.classList.add('my-message');
-            userName = 'You';
-        }
+            const div = document.createElement('div');
+            div.classList.add('message');
+            if (user_id == user_id_s) {
+                div.classList.add('my-message');
+                userName = 'You';
+            }
 
-        const box = document.createElement('div');
+            const box = document.createElement('div');
 
-        box.innerHTML = `
+            box.innerHTML = `
             <div>
                 <div class="message-user">
                     <img
@@ -156,11 +154,12 @@ socket.on(
             </div>
         `;
 
-        div.appendChild(box);
+            div.appendChild(box);
 
-        document.querySelector('.box-message').appendChild(div);
+            document.querySelector('.box-message').appendChild(div);
 
-        form_message.scrollTop = form_message.scrollHeight;
+            form_message.scrollTop = form_message.scrollHeight;
+        }
     }
 );
 
@@ -204,7 +203,6 @@ socket.on('statusAddMembers', ({ statusAddMember, msg }) => {
 });
 
 ////// change title room ///////
-const titleRoom = document.getElementById('title-room');
 const newTitleRoom = document.getElementById('new-title-room');
 
 function changeTitleRoom() {
@@ -220,12 +218,6 @@ function changeTitleRoom() {
         newTitleRoom.value = '';
     }
 }
-
-socket.on('statusChangeTitleRoom', ({ title }) => {
-    titleRoom.innerText = title;
-    document.getElementById(`room-${room_id}`).innerText = title;
-    document.title = title;
-});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

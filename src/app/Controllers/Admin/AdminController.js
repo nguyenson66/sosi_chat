@@ -1,28 +1,30 @@
-const User = require('../../Models/User')
+const asyncWrapper = require('../../Middleware/asyncWrapper');
+const jwt = require('jsonwebtoken');
+const path = require('path');
+const User = require('../../Models/User');
 
-exports.checkLogin = (req,res,next) => {
-    const user_cookie = req.cookies.user_cookie
-    if(!user_cookie){
-        res.redirect('/login')
+exports.checkLogin = asyncWrapper(async (req, res, next) => {
+    const user_cookie = req.cookies.user_cookie;
+
+    if (!user_cookie || user_cookie == '') {
+        res.redirect('/introduce');
+    } else {
+        const data_user = jwt.verify(user_cookie, process.env.JWT_KEY);
+
+        const user = await User.findById(data_user.user_id);
+
+        if (user && user.role > 3) {
+            next();
+        } else {
+            res.status(404).sendFile(
+                path.join(__dirname, '../../../views/404.html')
+            );
+        }
     }
-    else{
-        const data_user = jwt.verify(user_cookie, process.env.JWT_KEY)
+});
 
-        User.findById(data_user.user_id)
-            .then(user => {
-                if(!user) res.redirect('login')
-                else{
-                    req.body.user = user
-                    next()
-                }
-            })
-            .catch(err => {
-                console.log(err)
-                res.redirect('/login')
-            })
-    }
-}
+exports.Home = asyncWrapper(async (req, res) => {
+    const user = await User.find();
 
-exports.test = (req,res) => {
-    res.json(req.body)
-}
+    res.json(user);
+});

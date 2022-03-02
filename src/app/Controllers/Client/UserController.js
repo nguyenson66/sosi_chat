@@ -1,32 +1,26 @@
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const Crypto = require('crypto-js');
+const asyncWrapper = require('../../Middleware/asyncWrapper');
 const User = require('../../Models/User');
 
-exports.checkLogin = async (req, res, next) => {
+exports.checkLogin = asyncWrapper(async (req, res, next) => {
     const user_cookie = req.cookies.user_cookie;
     if (!user_cookie) {
         res.redirect('/introduce');
     } else {
         const data_user = jwt.verify(user_cookie, process.env.JWT_KEY);
 
-        User.findById(data_user.user_id)
-            .then((user) => {
-                if (user) {
-                    req.body.user = user;
+        const user = await User.findById(data_user.user_id);
 
-                    next();
-                } else {
-                    // console.log(err);
-                    res.redirect('/introduce');
-                }
-            })
-            .catch((err) => {
-                // console.log(err);
-                res.redirect('/introduce');
-            });
+        if (user) {
+            req.body.user = user;
+            next();
+        } else {
+            res.status(300).redirect('/introduce');
+        }
     }
-};
+});
 
 exports.checkCompleteUser = async (req, res, next) => {
     if (req.body.user.age === undefined) {
@@ -87,53 +81,45 @@ exports.logout = (req, res) => {
 
 /////////////////////////////////// POST ///////////////////////////////////////
 //[POST] /login
-exports.loginPOST = async (req, res) => {
+exports.loginPOST = asyncWrapper(async (req, res) => {
     // console.log(req.body)
     const email = req.body.email;
     const password = req.body.password;
-    let error = [];
 
-    User.findOne({ email })
-        .then((user) => {
-            if (!user) {
-                res.status(302).render('client/login', {
-                    error: 'Thông tin tài khoản hoặc mật khẩu không chính xác',
-                });
-            } else {
-                const answer_password = Crypto.AES.decrypt(
-                    user.password,
-                    process.env.CRYPTO_KEY
-                ).toString(Crypto.enc.Utf8);
+    const user = await User.findOne({ email });
 
-                if (answer_password === password) {
-                    const token_user = jwt.sign(
-                        { user_id: user._id, username: user.username },
-                        process.env.JWT_KEY,
-                        { expiresIn: '5d' }
-                    );
+    if (user) {
+        const answer_password = Crypto.AES.decrypt(
+            user.password,
+            process.env.CRYPTO_KEY
+        ).toString(Crypto.enc.Utf8);
 
-                    res.cookie('user_cookie', token_user, {
-                        maxAge: 5 * 24 * 60 * 60000,
-                    });
+        if (answer_password === password) {
+            const token_user = jwt.sign(
+                { user_id: user._id, username: user.username },
+                process.env.JWT_KEY,
+                { expiresIn: '5d' }
+            );
 
-                    res.redirect('/');
-                } else {
-                    res.status(302).render('client/login', {
-                        error: 'Thông tin tài khoản hoặc mật khẩu không chính xác',
-                    });
-                }
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(302).render('client/login', {
-                error: 'Something wrong',
+            res.cookie('user_cookie', token_user, {
+                maxAge: 5 * 24 * 60 * 60000,
             });
+
+            res.redirect('/');
+        } else {
+            res.status(302).render('client/login', {
+                error: 'Thông tin tài khoản hoặc mật khẩu không chính xác',
+            });
+        }
+    } else {
+        res.status(302).render('client/login', {
+            error: 'Thông tin tài khoản hoặc mật khẩu không chính xác',
         });
-};
+    }
+});
 
 //[POST] /register
-exports.registerPOST = async (req, res) => {
+exports.registerPOST = asyncWrapper(async (req, res) => {
     let { username, email, password, password2 } = req.body;
 
     if (password != password2) {
@@ -163,10 +149,10 @@ exports.registerPOST = async (req, res) => {
         newUser.save();
         res.redirect('/login');
     }
-};
+});
 
 //[POST] /my-profile
-exports.myProfilePOST = async (req, res) => {
+exports.myProfilePOST = asyncWrapper(async (req, res) => {
     if (req.body.age === '' || req.body.sex === '') {
         // check if age == null or user.sex == null render view profile
 
@@ -209,4 +195,4 @@ exports.myProfilePOST = async (req, res) => {
         newUser.save();
         res.redirect('/my-profile');
     }
-};
+});

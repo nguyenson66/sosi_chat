@@ -4,14 +4,19 @@ const User = require('../app/Models/User');
 const moment = require('moment');
 const events = require('../app/Middleware/EventEmitter');
 const botAI = require('../app/Middleware/BOT');
+const asyncWrapper = require('../app/Middleware/asyncWrapper');
 
 function socketIO(io) {
     io.on('connection', function (socket) {
         // console.log(socket.id);
 
-        socket.on('joinRoom', (room_id) => {
-            // console.log(room_id)
-            socket.join(room_id);
+        socket.on('joinRoom', (list_room_id) => {
+            let list_id = list_room_id.split(',');
+
+            /// join all room of user
+            for (let i = 0; i < list_id.length; i++) {
+                socket.join(list_id[i]);
+            }
         });
 
         socket.on(
@@ -21,13 +26,13 @@ function socketIO(io) {
 
                 const time = moment()
                     .utcOffset(420)
-                    .format('YYYY/MM/DD hh:mm A');
+                    .format('YYYY/MM/DD HH:mm:ss:ms');
                 // console.log(time)
 
                 let user_id_s = user_id,
                     user_name_s = user_name,
                     msg_s = msg,
-                    avatar = 'https://bit.ly/3Lxwgqe';
+                    avatar = process.env.AVATAR_STRANGER;
 
                 Room.findById(room_id)
                     .then(async (room) => {
@@ -49,20 +54,22 @@ function socketIO(io) {
 
                         // send message to all user in room
                         io.to(room_id).emit('message', {
+                            room_id,
                             user_id_s,
                             user_name_s,
-                            msg_s,
+                            msg,
                             type,
                             time,
                             avatar,
                         });
 
                         io.to(room_id).emit('typingMessage', {
+                            currentRoomId: room_id,
                             typingServer: false,
                         });
 
                         // console.log(message)
-                        message.save();
+                        await message.save();
 
                         //////////////////// MESSAGE BOT /////////////////
                         if (msg.substring(0, 4) == '!bot') {
@@ -203,12 +210,13 @@ function socketIO(io) {
 
                         const time = moment()
                             .utcOffset(420)
-                            .format('YYYY/MM/DD hh:mm A');
+                            .format('YYYY/MM/DD HH:mm:ss:ms');
                         //BOT send message to the room
                         io.to(room_id).emit('message', {
+                            room_id,
                             user_id_s: '621cd6aaf36dd4349f838a08',
                             user_name_s: 'BOT',
-                            msg_s: `'${user_name}' đã thêm '${user.username}' vào nhóm`,
+                            msg: `'${user_name}' đã thêm '${user.username}' vào nhóm`,
                             type: 'text',
                             time,
                             avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
@@ -242,29 +250,38 @@ function socketIO(io) {
         );
 
         // event change title room
-        socket.on('changeTitleRoom', async ({ user_name, title, room_id }) => {
-            try {
+        socket.on(
+            'changeTitleRoom',
+            asyncWrapper(async ({ user_name, title, room_id }) => {
                 let room = await Room.findById(room_id);
                 room.title = title;
                 room.save();
 
+                // format time
                 const time = moment()
                     .utcOffset(420)
-                    .format('YYYY/MM/DD hh:mm A');
+                    .format('YYYY/MM/DD HH:mm:ss:ms');
+
+                // check public_infor
+                let username = user_name;
+                if (!room.public_infor) username = 'Một người lạ';
+
                 //BOT send message to the room/////
                 io.to(room_id).emit('message', {
+                    room_id,
                     user_id_s: '621cd6aaf36dd4349f838a08',
                     user_name_s: 'BOT',
-                    msg_s: `'${user_name}' đã thay đổi tên của nhóm`,
+                    msg: `'${username}' đã thay đổi tên của nhóm`,
                     type: 'text',
                     time,
                     avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
                 });
 
+                // save message to database
                 const message = new Message({
                     room_id: room_id,
                     user_id: '621cd6aaf36dd4349f838a08',
-                    content: `${user_name} đã thay đổi tên của nhóm`,
+                    content: `${username} đã thay đổi tên của nhóm`,
                     type: 'text',
                     time,
                 });
@@ -273,18 +290,30 @@ function socketIO(io) {
                 ////////////////////////////////////
 
                 io.to(room_id).emit('statusChangeTitleRoom', {
+                    currentRoomId: room_id,
                     title,
                 });
-            } catch (error) {
-                console.log(error);
-            }
-        });
+            })
+        );
 
         //listen typing message event
         socket.on('typingMessage', ({ room_id, typing }) => {
             const typingServer = typing;
+            let timeOut = undefined;
+
+            if (typing) {
+                timeOut = setTimeout(() => {
+                    io.to(room_id).emit('typingMessage', {
+                        currentRoomId: room_id,
+                        typingServer: false,
+                    });
+                }, 5000);
+            } else {
+                clearTimeout(timeOut);
+            }
 
             io.to(room_id).emit('typingMessage', {
+                currentRoomId: room_id,
                 typingServer,
             });
         });
@@ -296,12 +325,13 @@ function socketIO(io) {
 
     //user out room
     events.on('userOutRoom', (username, roomId) => {
-        const time = moment().utcOffset(420).format('YYYY/MM/DD hh:mm A');
+        const time = moment().utcOffset(420).format('YYYY/MM/DD HH:mm:ss:ms');
         //BOT send message to the room
         io.to(roomId).emit('message', {
+            room_id: roomId,
             user_id_s: '621cd6aaf36dd4349f838a08',
             user_name_s: 'BOT',
-            msg_s: `'${username}' đã rời khỏi nhóm. Mọi tin nhắn của ${username} sẽ bị xóa vui lòng làm mới lại trang`,
+            msg: `'${username}' đã rời khỏi nhóm :<  !!!`,
             type: 'text',
             time,
             avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
@@ -310,7 +340,31 @@ function socketIO(io) {
         const message = new Message({
             room_id: roomId,
             user_id: '621cd6aaf36dd4349f838a08',
-            content: `'${username}' đã rời khỏi nhóm. Mọi tin nhắn của ${username} sẽ bị xóa vui lòng làm mới lại trang`,
+            content: `'${username}' đã rời khỏi nhóm :< !!!`,
+            type: 'text',
+            time,
+        });
+
+        message.save();
+    });
+
+    events.on('userJoinRoom', ({ username, roomId }) => {
+        const time = moment().utcOffset(420).format('YYYY/MM/DD HH:mm:ss:ms');
+        //BOT send message to the room
+        io.to(roomId).emit('message', {
+            room_id: roomId,
+            user_id_s: '621cd6aaf36dd4349f838a08',
+            user_name_s: 'BOT',
+            msg: `'${username}' vừa tham gia nhóm. Chúc bạn một ngày vui vẻ !!!`,
+            type: 'text',
+            time,
+            avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',
+        });
+
+        const message = new Message({
+            room_id: roomId,
+            user_id: '621cd6aaf36dd4349f838a08',
+            content: `'${username}' vừa tham gia nhóm. Chúc bạn một ngày vui vẻ !!!`,
             type: 'text',
             time,
         });

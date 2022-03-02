@@ -43,7 +43,7 @@
                     
                     <div class="content-room">
                             <h6 id="room-<%- list_room[i]._id %>"><%- list_room[i].title %></h6>
-                            <p>BOT : Chúc các bạn trò chuyện vui vẻ</p>
+                            <p id="last-message-<%- list_room[i]._id %>"><%- list_room[i].username %>: <%- list_room[i].last_msg %></p>
                         </div>
                 </div>
         <% } %>

@@ -463,7 +463,13 @@ body {
     display: none;
 }
 
+.content-room h6 {
+    font-size: 17px;
+}
+
 .content-room p {
+    font-size: 15px;
+    max-width: 40vh;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

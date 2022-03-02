@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%- title %></title>
+        <title><%- data_room.title %></title>
         <link rel="stylesheet" href="/css/chat-new.css" />
         <link rel="stylesheet" href="/css/toast.css" />
         <link
@@ -35,12 +35,11 @@
                 <div id="notification"></div>
                 <div class="conversation-information">
                     <div class="name-conversation">
-                        <img
-                            src="https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/question_2_p4nifa.png"
-                            alt="image"
-                        />
+                        <img src="<%- data_room.avatar %>" alt="image" />
 
-                        <h3 id="title-room"><%- title %></h3>
+                        <h3 id="title-room-<%- data_room._id %>">
+                            <%- data_room.title %>
+                        </h3>
                     </div>
 
                     <div class="conversation-option">
@@ -92,13 +91,15 @@
                                 </div>
                             </div>
                             <div class="option-content" style="border: none">
-                                <a href="/out/<%- room_id %>">Rời khỏi nhóm</a>
+                                <a href="/out/<%- data_room._id %>"
+                                    >Rời khỏi nhóm</a
+                                >
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="box-message">
+                <div class="box-message" style="padding-bottom: 10px">
                     <% for(let i = 0;i< message.length;i++) {%> <% if (user._id
                     == message[i].user_id) { %>
 
@@ -109,7 +110,7 @@
                                     src="<%- message[i].avatar %>"
                                     alt="avatar"
                                 />
-                                <p><%- message[i].user_name %></p>
+                                <p><%- message[i].username %></p>
                             </div>
 
                             <div class="message-content">
@@ -147,7 +148,7 @@
                                     src="<%- message[i].avatar %>"
                                     alt="avatar"
                                 />
-                                <p><%- message[i].user_name %></p>
+                                <p><%- message[i].username %></p>
                             </div>
 
                             <div class="message-content">
@@ -255,13 +256,24 @@
             var user_id = '<%- user._id%>';
             var user_name = '<%- user.username %>';
 
+            // list id room
+            var list_room_id = '<%- list_id_room %>';
+
+            //socket
+            let socket = io();
+
             function redirectRoom(id) {
                 window.location.href = id;
             }
+
+            ///// get url
+            var url = window.location.pathname.split('/');
+            var room_id = url[url.length - 1];
         </script>
 
-        <script src="/js/chat-script.js"></script>
         <script src="/js/toast.js"></script>
+        <script src="/js/chat-script.js"></script>
         <script src="/js/createRoom.js"></script>
+        <script src="/js/infor-user-room.js"></script>
     </body>
 </html>
