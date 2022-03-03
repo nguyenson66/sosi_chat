@@ -63,13 +63,13 @@ module.exports.getInforRoom = asyncWrapper(async (list_room, user_id) => {
             };
         } else {
             const user = await User.findById(last_msg.user_id).select(
-                '_id username'
+                'username'
             );
 
             let username = user.username;
 
             // check public infor , if public_infor = false => username = 'Stranger'
-            if (!list_room[i].type == 'stranger') username = 'Người lạ';
+            if (list_room[i].type == 'stranger') username = 'Người lạ';
 
             if (last_msg.user_id == process.env.ID_BOT) username = 'BOT';
 
