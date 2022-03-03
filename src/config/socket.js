@@ -5,6 +5,7 @@ const moment = require('moment');
 const events = require('../app/Middleware/EventEmitter');
 const botAI = require('../app/Middleware/BOT');
 const asyncWrapper = require('../app/Middleware/asyncWrapper');
+const mathProcessing = require('../app/Middleware/mathProcessing');
 
 function socketIO(io) {
     io.on('connection', function (socket) {
@@ -89,96 +90,152 @@ function socketIO(io) {
         );
 
         /// new stranger room
-        socket.on('new-stranger-room', (user_id) => {
-            User.findById(user_id)
-                .then(async function (user) {
-                    const option = user.option;
-                    let list_user = [];
+        socket.on(
+            'new-stranger-room',
+            asyncWrapper(async (user_id) => {
+                const user = await User.findById(user_id).select(
+                    '_id option sex'
+                );
+                const option = user.option;
 
-                    for (let i = 0; i < option.length; i++) {
-                        // Search for the right user through option
-                        await User.find({ sex: option[i], option: user.sex })
-                            .then((user_pair) => {
-                                // delete user created room in list user
-                                user_pair = user_pair.find(
-                                    (user) => user._id != user_id
-                                );
+                ////////// user filter level 1 ////////
+                let list_user = [];
 
-                                if (user_pair != undefined) {
-                                    list_user = list_user.concat(user_pair);
-                                }
-                            })
-                            .catch((err) => console.log(err.message));
+                for (let i = 0; i < option.length; i++) {
+                    // get list user have sex in option, and stranger have option is user.sex
+
+                    let users_pair = await User.find({
+                        sex: option[i],
+                        option: user.sex,
+                    }).select('_id');
+
+                    /// function remove element
+                    users_pair = mathProcessing.removeA(users_pair);
+
+                    if (users_pair != undefined) {
+                        list_user = list_user.concat(users_pair);
                     }
+                }
+                ////////////////////////////////////////
 
-                    let list_user_2 = [];
-                    /// Check if two users have the same room
-                    for (let j = 0; j < list_user.length; j++) {
-                        await Room.findOne({
-                            $or: [
-                                { list_user: [user_id, list_user[j]._id] },
-                                { list_user: [list_user[j]._id, user_id] },
-                            ],
-                        })
-                            .then((c_room) => {
-                                if (!c_room) list_user_2.push(list_user[j]);
-                            })
-                            .catch((err) => console.log(err.message));
-                    }
+                //////////// User filter level 2 //////////
 
-                    if (list_user_2.length != 0) {
-                        const rd_user = Math.floor(
-                            Math.random() * list_user_2.length
-                        );
-                        const room = new Room({
-                            title: 'Trò chuyện cùng người lạ',
-                            list_user: [
-                                user_id,
-                                list_user_2[rd_user]._id,
-                                '621cd6aaf36dd4349f838a08',
-                            ],
-                            public_infor: false,
-                            public_room: false,
-                            avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/question_2_p4nifa.png',
+                let list_user_2 = [];
+
+                if (list_user.length != 0) {
+                    for (let i = 0; i < list_user.length; i++) {
+                        const room = await Room.findOne({
+                            list_user: {
+                                $all: [
+                                    list_user[i]._id,
+                                    user_id,
+                                    process.env.ID_BOT,
+                                ],
+                            },
+                            type: 'stranger',
                         });
 
-                        room.save((err, room) => {
-                            if (err) console.log(err.message);
-                            else {
-                                socket.emit('successfull-pairing', {
-                                    status: 200,
-                                    room_id: room._id,
-                                });
-                            }
-                        });
-                    } else {
-                        socket.emit('successfull-pairing', {
-                            status: 404,
-                            room_id: '',
-                        });
+                        if (!room) {
+                            list_user_2.push(list_user[i]._id);
+                        }
                     }
-                })
-                .catch((err) => console.log(err.message));
-        });
+                }
+
+                //////////////////////////////////////////
+
+                ////////// Random user match and send responce ////////
+                if (list_user_2.length != 0) {
+                    const rd_user = Math.floor(
+                        Math.random() * list_user_2.length
+                    );
+
+                    const room = new Room({
+                        title: 'Trò chuyện cùng người lạ',
+                        type: 'stranger',
+                        list_user: [
+                            user_id,
+                            list_user_2[rd_user],
+                            process.env.ID_BOT,
+                        ],
+                        public_infor: false,
+                        public_room: false,
+                        avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665781/sosichat/icon/question_2_p4nifa.png',
+                    });
+
+                    room.save((err, room) => {
+                        if (err) {
+                            socket.emit('successfull-pairing', {
+                                status: 500,
+                                room_id: '',
+                            });
+                        } else {
+                            socket.emit('successfull-pairing', {
+                                status: 200,
+                                room_id: room._id,
+                            });
+                        }
+                    });
+
+                    /// first message in the room ///
+                    // format time
+                    const time = moment()
+                        .utcOffset(420)
+                        .format('YYYY/MM/DD HH:mm:ss:ms');
+
+                    const message = new Message({
+                        room_id: room._id,
+                        user_id: process.env.ID_BOT,
+                        content:
+                            'Sositech.xyz chúc các bạn có một ngày thật vui vẻ, hạnh phúc !!!',
+                        type: 'text',
+                        time,
+                    });
+
+                    message.save();
+                } else {
+                    socket.emit('successfull-pairing', {
+                        status: 404,
+                        room_id: '',
+                    });
+                }
+
+                ////////////////////////////////////////
+            })
+        );
 
         //// new group room chat
-        socket.on('new-group-chat', (user_id) => {
-            Room.create(
-                {
+        socket.on(
+            'new-group-chat',
+            asyncWrapper(async (user_id) => {
+                const room = await Room.create({
                     title: 'Nhóm chat vui vẻ <3',
+                    type: 'group',
                     list_user: [user_id, '621cd6aaf36dd4349f838a08'],
                     public_room: true,
                     public_infor: true,
                     avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png',
-                },
-                function (err, data) {
-                    if (err) console.log(err.message);
-                    else {
-                        socket.emit('redirect-group-chat', data._id);
-                    }
-                }
-            );
-        });
+                });
+
+                socket.emit('redirect-group-chat', room._id);
+
+                /// first message in the room ///
+                // format time
+                const time = moment()
+                    .utcOffset(420)
+                    .format('YYYY/MM/DD HH:mm:ss:ms');
+
+                const message = new Message({
+                    room_id: room._id,
+                    user_id: process.env.ID_BOT,
+                    content:
+                        'Sositech.xyz chúc các bạn có một ngày thật vui vẻ, hạnh phúc !!!',
+                    type: 'text',
+                    time,
+                });
+
+                message.save();
+            })
+        );
 
         /// add member to room
         socket.on(
@@ -271,7 +328,7 @@ function socketIO(io) {
                     room_id,
                     user_id_s: '621cd6aaf36dd4349f838a08',
                     user_name_s: 'BOT',
-                    msg: `'${username}' đã thay đổi tên của nhóm`,
+                    msg: `${username} đã thay đổi tên của nhóm`,
                     type: 'text',
                     time,
                     avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1646059461/sosichat/avatarbot_ai6zji.jpg',

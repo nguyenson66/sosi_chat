@@ -69,7 +69,9 @@ module.exports.getInforRoom = asyncWrapper(async (list_room, user_id) => {
             let username = user.username;
 
             // check public infor , if public_infor = false => username = 'Stranger'
-            if (!list_room[i].public_infor) username = 'Người lạ';
+            if (!list_room[i].type == 'stranger') username = 'Người lạ';
+
+            if (last_msg.user_id == process.env.ID_BOT) username = 'BOT';
 
             if (user_id == last_msg.user_id) username = 'You';
 

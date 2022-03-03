@@ -7,7 +7,9 @@ module.exports = (fn) => {
         } catch (error) {
             console.log(error);
 
-            res.json('error');
+            res.status(500).sendFile(
+                path.join(__dirname, '../../views/500.html')
+            );
         }
     };
 };

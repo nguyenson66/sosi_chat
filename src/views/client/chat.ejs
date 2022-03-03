@@ -64,6 +64,9 @@
                                     ></i>
                                 </div>
                             </div>
+
+                            <% if(data_room.type == 'group') { %>
+
                             <div class="option-content">
                                 <h6>Link tham gia nhóm :</h6>
                                 <div class="option-layout">
@@ -90,6 +93,9 @@
                                     ></i>
                                 </div>
                             </div>
+
+                            <% } %>
+
                             <div class="option-content" style="border: none">
                                 <a href="/out/<%- data_room._id %>"
                                     >Rời khỏi nhóm</a
