@@ -81,7 +81,11 @@ exports.chat = asyncWrapper(async (req, res) => {
         );
 
         /// get message in the room
-        let message = await getMessage_Room.getMessage(data_room, 0);
+        let message = await getMessage_Room.getMessage(
+            data_room,
+            data_user._id,
+            0
+        );
 
         res.render('client/chat', {
             data_room,
