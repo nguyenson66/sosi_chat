@@ -228,19 +228,25 @@ const linkJoinRoom = window.location.hostname + '/j/' + room_id;
 
 joinRoom.innerText = linkJoinRoom;
 
+//copy text to clipboard
 async function copyTextToClipboard() {
-    console.log(linkJoinRoom);
-    try {
-        await navigator.clipboard.writeText(linkJoinRoom);
-        showToast({
-            type: 'success',
-            title: 'Thành công',
-            icon: 'far fa-check-circle',
-            message: 'Đã copy liên kết tham gia nhóm chat !!!',
-        });
-    } catch (error) {
-        console.error('Failed to copy : ', error);
-    }
+    // try {
+    //     await navigator.clipboard.writeText(linkJoinRoom);
+    //     showToast({
+    //         type: 'success',
+    //         title: 'Thành công',
+    //         icon: 'far fa-check-circle',
+    //         message: 'Đã copy liên kết tham gia nhóm chat !!!',
+    //     });
+    // } catch (error) {
+    //     console.error('Failed to copy : ', error);
+    // }
+    showToast({
+        type: 'info',
+        title: 'Bảo trì',
+        icon: 'fas fa-info-circle',
+        message: 'Chức năng này đang được bảo trì. Vui lòng thử lại sau',
+    });
 }
 
 /// api get message //
