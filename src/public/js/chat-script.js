@@ -123,7 +123,7 @@ socket.on(
             if (type === 'sticker') {
                 messageServer = `<img src="/gif/${msg}.gif" alt="${type}" draggable="false" onmouseover="overSticker(this)" >`;
             } else if (type === 'image') {
-                messageServer = `<img src="${msg}" alt="${type}" onclick="pushUpImage(${msg})">`;
+                messageServer = `<img src="${msg}" alt="${type}" onclick="pushUpImage('${msg}')">`;
             }
 
             const div = document.createElement('div');
