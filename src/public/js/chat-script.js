@@ -226,7 +226,9 @@ function changeTitleRoom() {
 const joinRoom = document.getElementById('linkJoinRoom');
 const linkJoinRoom = window.location.hostname + '/j/' + room_id;
 
-joinRoom.innerText = linkJoinRoom;
+if (joinRoom) {
+    joinRoom.innerText = linkJoinRoom;
+}
 
 //copy text to clipboard
 async function copyTextToClipboard() {
