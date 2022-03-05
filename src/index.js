@@ -7,7 +7,6 @@ const io = require('socket.io')(server);
 const path = require('path');
 const routes = require('./routes');
 const db = require('./config/connectDB');
-const dotenv = require('dotenv').config();
 
 const socketIO = require('./config/socket');
 

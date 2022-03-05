@@ -9,6 +9,35 @@ body {
     overflow: hidden;
 }
 
+#push-up-image {
+    z-index: 10;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#image-push-up {
+    max-height: 80vh;
+    max-width: 90vh;
+}
+
+#close-push-up {
+    font-size: 40px;
+    cursor: pointer;
+    position: fixed;
+    top: 30px;
+    right: 60px;
+    color: #fff;
+}
+
+#close-push-up:hover {
+    color: rgb(255, 88, 88);
+}
+
 .layout {
     display: flex;
     flex-direction: row;
@@ -181,8 +210,11 @@ body {
 }
 
 .message-user img {
+    object-fit: cover;
+    object-position: center;
+
     height: 35px;
-    width: auto;
+    width: 35px;
     border-radius: 50%;
     border: solid 1px rgb(255, 255, 255);
 }
@@ -217,7 +249,12 @@ body {
 
 .content.image-message img {
     max-width: 65vh;
+    max-height: 40vh;
     height: auto;
+}
+
+.image-message img {
+    cursor: pointer;
 }
 
 .time-send {
@@ -518,6 +555,10 @@ body {
 /* ///////// set size browser ////////////// */
 
 @media screen and (min-width: 1000px) {
+    #image-push-up {
+        max-width: 150vh;
+    }
+
     .information {
         width: 70vh;
     }

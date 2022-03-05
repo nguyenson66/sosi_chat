@@ -1,0 +1,74 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.form-input {
+    position: static;
+    background-image: linear-gradient(
+        to top,
+        #ff9a9e 0%,
+        #fecfef 99%,
+        #fecfef 100%
+    );
+    height: fit-content;
+    width: 600px;
+    padding: 10vh 10px;
+    border-radius: 10px;
+    z-index: 20px;
+    box-shadow: 0px 5px 10px rgb(119, 119, 119);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.form-input h1 {
+    text-align: center;
+    font-style: italic;
+}
+
+#msg {
+    color: rgb(255, 74, 74);
+}
+
+.form-input p {
+    margin-top: 40px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.form-input span {
+    color: rgb(55, 133, 0);
+}
+
+.send-again p {
+    font-size: 17px;
+    margin-top: 6vh;
+    color: #1e59bf;
+    cursor: pointer;
+}
+
+.send-again p:hover {
+    color: rgb(253, 81, 81);
+}
+
+.send-again p:active {
+    color: rgb(255, 0, 191);
+}
+
+.block-event-click {
+    pointer-events: none;
+    opacity: 0.5;
+}

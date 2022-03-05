@@ -122,6 +122,8 @@ socket.on(
             // check type message and change value innerHTML
             if (type === 'sticker') {
                 messageServer = `<img src="/gif/${msg}.gif" alt="${type}" draggable="false" onmouseover="overSticker(this)" >`;
+            } else if (type === 'image') {
+                messageServer = `<img src="${msg}" alt="${type}" onclick="pushUpImage(${msg})">`;
             }
 
             const div = document.createElement('div');
@@ -240,3 +242,191 @@ async function copyTextToClipboard() {
         console.error('Failed to copy : ', error);
     }
 }
+
+/// api get message //
+const boxMessage = document.getElementById('box-message');
+let checkScroll = true;
+let skip = 20;
+
+if (checkScroll) {
+    let oldHeight = boxMessage.scrollHeight;
+
+    function scrollY() {
+        // if user scroll top of list message => get api message
+        if (boxMessage.scrollTop === 0) {
+            fetch(`/message?room_id=${room_id}&skip=${skip}`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.status !== 200) {
+                        return;
+                    }
+
+                    if (data.message.length === 0) {
+                        checkScroll = false;
+                        return;
+                    }
+                    // add skip 20
+                    skip += 20;
+
+                    const message = data.message;
+                    let div = document.createElement('div');
+
+                    for (let i = 0; i < message.length; i++) {
+                        let msg = document.createElement('div');
+                        msg.classList.add('message');
+
+                        if (user_id === message[i].user_id)
+                            msg.classList.add('my-message');
+
+                        let content = '';
+
+                        if (message[i].type === 'sticker') {
+                            content = `
+                                <img
+                                    src="/gif/${message[i].content}.gif"
+                                    alt="${message[i].type}"
+                                    draggable="false"
+                                    onmouseover="overSticker(this)"
+                                />
+                            `;
+                        } else if (message[i].type === 'image') {
+                            content = `
+                                <img
+                                    src="${message[i].content}"
+                                    alt="${message[i].type}"
+                                />
+                            `;
+                        } else {
+                            content = `<span>${message[i].content}</span>`;
+                        }
+
+                        msg.innerHTML = `
+                            <div>
+                                <div class="message-user">
+                                    <img
+                                        src="${message[i].avatar}"
+                                        alt="avatar"
+                                    />
+                                    <p>${message[i].username}</p>
+                                </div>
+
+                                <div class="message-content">
+                                    <div
+                                        class="content ${message[i].type}-message"
+                                    >
+                                        ${content}
+                                    </div>
+                                    <div class="time-send">
+                                        <span>${message[i].time}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        // push message to div
+                        div.appendChild(msg);
+                    }
+
+                    // push div to the top box message
+                    boxMessage.innerHTML = div.innerHTML + boxMessage.innerHTML;
+
+                    // set old position scroll
+                    boxMessage.scrollTop = boxMessage.scrollHeight - oldHeight;
+                    oldHeight = boxMessage.scrollHeight;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }
+}
+
+/// choose and send image ///
+const chooseImage = document.getElementById('image-message');
+
+btnImage.addEventListener('click', () => {
+    chooseImage.click();
+});
+
+// It will be triggered when a file will be selected
+chooseImage.addEventListener('change', () => {
+    const typeFile = chooseImage.files[0].type;
+    var sizeFile = chooseImage.files[0].size / 1024 / 1024;
+
+    if (sizeFile > 1.5) {
+        showToast({
+            type: 'error',
+            title: 'Error',
+            icon: 'far fa-times-circle',
+            message: 'Vui lòng lựa chọn ảnh có kích thước nhỏ hơn 1.5 MB',
+        });
+        return;
+    }
+
+    if (typeFile === 'image/jpeg' || typeFile === 'image/png') {
+        const formData = document.getElementById('form-image');
+
+        var form = new FormData(formData);
+
+        fetch('/upload-image', {
+            // Your POST endpoint
+            method: 'POST',
+            body: form, // This is your file object
+        })
+            .then(
+                (response) => response.json() // if the response is a JSON object
+            )
+            .then((data) => {
+                //emit image message to server
+                if (data.status === 200) {
+                    socket.emit('messageChatRoom', {
+                        room_id,
+                        user_id,
+                        user_name,
+                        type: 'image',
+                        msg: data.result.url,
+                    });
+                } else {
+                    showToast({
+                        type: 'error',
+                        title: 'Error',
+                        icon: 'far fa-times-circle',
+                        message:
+                            'Server đang quá tải vui lòng thử lại sau. Cảm ơn !',
+                    });
+                }
+            })
+            .catch((error) => {
+                showToast({
+                    type: 'error',
+                    title: 'Error',
+                    icon: 'far fa-times-circle',
+                    message:
+                        'Không thể upload ảnh vào lúc này vui lòng kiểm tra kết nối !',
+                });
+            });
+    } else {
+        showToast({
+            type: 'error',
+            title: 'Error',
+            icon: 'far fa-times-circle',
+            message: 'Vui lòng chọn ảnh có đuôi là png hoặc jpg !!',
+        });
+    }
+});
+
+//// push up image
+const divPushUp = document.querySelector('#push-up-image');
+const imagePushUp = document.querySelector('#image-push-up');
+const closePushUp = document.querySelector('#close-push-up');
+
+function pushUpImage(url) {
+    divPushUp.style.display = 'flex';
+    imagePushUp.src = url;
+}
+
+closePushUp.addEventListener('click', () => {
+    divPushUp.style.display = 'none';
+});

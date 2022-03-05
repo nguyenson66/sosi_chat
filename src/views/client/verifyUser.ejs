@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Đăng ký tài khoản tại Sositech.xyz</title>
+
+        <link rel="icon" href="/images/cupid.png" />
+
+        <link rel="stylesheet" href="/css/verify.css" />
+    </head>
+    <body>
+        <main>
+            <div class="form-input">
+                <h1>Cảm ơn bạn đã đăng ký tài khoản tại Sositech.xyz</h1>
+
+                <p id="msg"></p>
+
+                <p>
+                    Vui lòng kiểm tra hộp thư địa chỉ email :
+                    <span id="email"><%- email %></span> để xác minh tài khoản
+                </p>
+
+                <div class="send-again">
+                    <p id="send-mail">
+                        Gửi lại email xác minh (<span id="count-down">0s</span>)
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            let count = 0;
+            const sendMail = document.getElementById('send-mail');
+            const email = document.getElementById('email').innerText;
+            const msg = document.getElementById('msg');
+
+            function countDown() {
+                count -= 1;
+                document.getElementById('count-down').innerText = count + 's';
+                setTimeout(() => {
+                    if (count > 0) {
+                        countDown();
+                    }
+                }, 1000);
+            }
+
+            sendMail.addEventListener('click', () => {
+                if (count === 0) {
+                    count = 180;
+
+                    fetch('/send-email-verify?email=' + email)
+                        .then((response) => {
+                            return response.json();
+                        })
+                        .then((data) => {
+                            msg.innerText = data.msg;
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+
+                    countDown();
+                }
+            });
+        </script>
+
+        <script src="/js/flower.js"></script>
+    </body>
+</html>

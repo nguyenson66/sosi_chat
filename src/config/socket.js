@@ -210,7 +210,7 @@ function socketIO(io) {
                 const room = await Room.create({
                     title: 'Nhóm chat vui vẻ <3',
                     type: 'group',
-                    list_user: [user_id, '621cd6aaf36dd4349f838a08'],
+                    list_user: [user_id, process.env.ID_BOT],
                     public_room: true,
                     public_infor: true,
                     avatar: 'https://res.cloudinary.com/soicondibui/image/upload/v1642665782/sosichat/icon/people_a9kmc5.png',
@@ -271,7 +271,7 @@ function socketIO(io) {
                         //BOT send message to the room
                         io.to(room_id).emit('message', {
                             room_id,
-                            user_id_s: '621cd6aaf36dd4349f838a08',
+                            user_id_s: process.env.ID_BOT,
                             user_name_s: 'BOT',
                             msg: `'${user_name}' đã thêm '${user.username}' vào nhóm`,
                             type: 'text',
@@ -281,7 +281,7 @@ function socketIO(io) {
 
                         const message = new Message({
                             room_id: room_id,
-                            user_id: '621cd6aaf36dd4349f838a08',
+                            user_id: process.env.ID_BOT,
                             content: `${user_name} đã thêm ${user.username} vào nhóm`,
                             type: 'text',
                             time,
@@ -326,7 +326,7 @@ function socketIO(io) {
                 //BOT send message to the room/////
                 io.to(room_id).emit('message', {
                     room_id,
-                    user_id_s: '621cd6aaf36dd4349f838a08',
+                    user_id_s: process.env.ID_BOT,
                     user_name_s: 'BOT',
                     msg: `${username} đã thay đổi tên của nhóm`,
                     type: 'text',
@@ -337,7 +337,7 @@ function socketIO(io) {
                 // save message to database
                 const message = new Message({
                     room_id: room_id,
-                    user_id: '621cd6aaf36dd4349f838a08',
+                    user_id: process.env.ID_BOT,
                     content: `${username} đã thay đổi tên của nhóm`,
                     type: 'text',
                     time,
@@ -386,7 +386,7 @@ function socketIO(io) {
         //BOT send message to the room
         io.to(roomId).emit('message', {
             room_id: roomId,
-            user_id_s: '621cd6aaf36dd4349f838a08',
+            user_id_s: process.env.ID_BOT,
             user_name_s: 'BOT',
             msg: `'${username}' đã rời khỏi nhóm :<  !!!`,
             type: 'text',
@@ -396,7 +396,7 @@ function socketIO(io) {
 
         const message = new Message({
             room_id: roomId,
-            user_id: '621cd6aaf36dd4349f838a08',
+            user_id: process.env.ID_BOT,
             content: `'${username}' đã rời khỏi nhóm :< !!!`,
             type: 'text',
             time,
@@ -410,7 +410,7 @@ function socketIO(io) {
         //BOT send message to the room
         io.to(roomId).emit('message', {
             room_id: roomId,
-            user_id_s: '621cd6aaf36dd4349f838a08',
+            user_id_s: process.env.ID_BOT,
             user_name_s: 'BOT',
             msg: `'${username}' vừa tham gia nhóm. Chúc bạn một ngày vui vẻ !!!`,
             type: 'text',
@@ -420,7 +420,7 @@ function socketIO(io) {
 
         const message = new Message({
             room_id: roomId,
-            user_id: '621cd6aaf36dd4349f838a08',
+            user_id: process.env.ID_BOT,
             content: `'${username}' vừa tham gia nhóm. Chúc bạn một ngày vui vẻ !!!`,
             type: 'text',
             time,

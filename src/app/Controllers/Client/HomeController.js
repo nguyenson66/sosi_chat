@@ -1,9 +1,11 @@
 const path = require('path');
 const Crypto = require('crypto-js');
+const fs = require('fs');
 const Room = require('../../Models/Room');
 const events = require('../../Middleware/EventEmitter');
 const asyncWrapper = require('../../Middleware/asyncWrapper');
 const getMessage_Room = require('../../Middleware/getMessage_Room');
+const upload = require('../../Middleware/upload');
 
 //[GET] /introduce
 exports.introduce = (req, res) => {
@@ -116,3 +118,48 @@ exports.outRoom = asyncWrapper(async (req, res) => {
 });
 
 /////////////////////////////////// POST ///////////////////////////////////////
+
+///////////////////////// API /////////////////////////////////
+
+//[GET] /message?room_id=...&skip=....
+exports.getMessage = asyncWrapper(async (req, res) => {
+    const room_id = req.query.room_id;
+    const skip = req.query.skip;
+    const data_user = req.body.user;
+
+    const data_room = await Room.findById(room_id);
+
+    //check user exists in the room
+    if (!data_room.list_user.includes(data_user._id)) {
+        //if user doesn't exist in the room, user will see 404 not found
+        return res.status(404).json({
+            status: 404,
+            msg: 'User does not exists in the room',
+        });
+    }
+
+    /// get message in the room
+    let message = await getMessage_Room.getMessage(
+        data_room,
+        data_user._id,
+        skip
+    );
+
+    res.json({
+        status: 200,
+        message,
+    });
+});
+
+//[POST] /upload-image
+exports.uploadImage = asyncWrapper(async (req, res) => {
+    const result = await upload.uploadImage(req.file.path);
+
+    fs.unlink(req.file.path, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+
+    res.json(result);
+});

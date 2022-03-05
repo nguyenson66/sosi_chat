@@ -12,6 +12,7 @@ const User = new Schema(
         email: String,
         status: Number,
         role: Number,
+        isVerified: Boolean,
     },
     { versionKey: false }
 );

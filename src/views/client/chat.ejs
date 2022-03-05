@@ -17,7 +17,6 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
-
         <script
             src="https://kit.fontawesome.com/8bf767fd4b.js"
             crossorigin="anonymous"
@@ -28,6 +27,15 @@
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
+        <div id="push-up-image">
+            <img
+                id="image-push-up"
+                src="https://res.cloudinary.com/soicondibui/image/upload/v1646453072/dxpt6sm6lhzmcgtl84tp.jpg"
+                alt="img"
+            />
+            <i id="close-push-up" class="fas fa-times"></i>
+        </div>
+
         <div class="layout">
             <%- include("./infor-user-room.ejs") %>
 
@@ -105,7 +113,12 @@
                     </div>
                 </div>
 
-                <div class="box-message" style="padding-bottom: 10px">
+                <div
+                    class="box-message"
+                    style="padding-bottom: 10px"
+                    id="box-message"
+                    onscroll="scrollY()"
+                >
                     <% for(let i = 0;i< message.length;i++) {%> <% if (user._id
                     == message[i].user_id) { %>
 
@@ -134,6 +147,7 @@
                                     <img
                                         src="<%- message[i].content %>"
                                         alt="<%- message[i].type %>"
+                                        onclick="pushUpImage('<%- message[i].content %>')"
                                     />
                                     <% } else { %>
                                     <span><%- message[i].content %></span>
@@ -172,7 +186,7 @@
                                     <img
                                         src="<%- message[i].content %>"
                                         alt="<%- message[i].type %>"
-                                        draggable="false"
+                                        onclick="pushUpImage('<%- message[i].content %>')"
                                     />
                                     <% } else { %>
                                     <span><%- message[i].content %></span>
@@ -212,6 +226,19 @@
                     </div>
                 </div>
 
+                <form
+                    id="form-image"
+                    enctype="multipart/form-data"
+                    method="post"
+                >
+                    <input
+                        style="display: none"
+                        name="image"
+                        type="file"
+                        id="image-message"
+                    />
+                </form>
+
                 <div
                     style="
                         padding: 5px 10px 10px 10px;
@@ -234,6 +261,7 @@
                             autocomplete="off"
                             autofocus
                         />
+
                         <button
                             class="fa fa-paper-plane"
                             style="border: none; cursor: pointer"

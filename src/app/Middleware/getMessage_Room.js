@@ -6,8 +6,8 @@ module.exports.getMessage = asyncWrapper(
     async (data_room, user_id, numberSkip) => {
         let message = await Message.find({ room_id: data_room._id })
             .sort({ time: 'desc' })
-            .limit(20)
-            .skip(numberSkip);
+            .skip(Number(numberSkip))
+            .limit(20);
 
         /// check type of room if type == group => username, avatar public
         if (data_room.type == 'group') {

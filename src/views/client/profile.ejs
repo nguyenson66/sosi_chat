@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Thay đổi thông tin</title>
         <link rel="stylesheet" href="/css/profile.css" />
+        <link rel="stylesheet" href="/css/toast.css" />
 
         <link
             rel="stylesheet"
@@ -13,13 +14,28 @@
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossorigin="anonymous"
         />
+
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+        <script
+            src="https://kit.fontawesome.com/8bf767fd4b.js"
+            crossorigin="anonymous"
+        ></script>
     </head>
     <body>
+
+        <div id="notification"></div>
+
         <div class="profile">
             <div class="user-image">
                 <div class="cover-image"></div>
                 <div class="avatar-image">
-                    <img src="https://bit.ly/3vdVyEd" alt="avatar" />
+                    <div class="box-image">
+                        <img id="avatar" src="<%- user.avatar %>" alt="avatar" />
+                        <i id="select-image" class="fas fa-camera-retro"></i>
+                    </div>
                 </div>
             </div>
 
@@ -73,13 +89,15 @@
                     class="block"
                     action="/my-profile"
                     method="post"
+                    enctype="multipart/form-data"
                 >
                     <h6
                         class="notify-error"
                         style="color: rgb(255, 92, 92); text-align: center"
-                    >
-                        <%- err %>
+                        >
+                            <%- err %>
                     </h6>
+                 <input type="file" name="image" id="image" style="display: none;">
                     <div class="data row">
                         <h6 class="col-sm-5">Username :</h6>
                         <input
@@ -159,6 +177,7 @@
                         </div>
                     </div>
                 </form>
+
                 <div class="option-button">
                     <button id="btn-update-profile" class="btn btn-success">
                         Cập nhật thông tin
@@ -190,6 +209,7 @@
 
 
         </script>
+        <script src="/js/toast.js"></script>
         <script src="/js/my-profile.js"></script>
         <script src="/js/flower.js"></script>
     </body>

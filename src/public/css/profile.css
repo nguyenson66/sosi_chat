@@ -60,12 +60,36 @@ input {
     justify-content: center;
 }
 
-.avatar-image img {
+.box-image i {
+    font-size: 20px;
+    color: #000;
+    position: absolute;
+    bottom: 0;
+    left: calc(50% + 4vh);
+    background-color: rgb(177, 177, 177);
+    padding: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.box-image i:active {
+    transform: translateY(1px);
+}
+
+.box-image img {
+    object-fit: cover;
+    object-position: center top;
+
     background-color: rgb(238, 238, 238);
-    height: 20vh;
-    width: 20vh;
+    min-height: 150px;
+    min-width: 150px;
+    height: 150px;
+    width: 150px;
     border-radius: 50%;
     border: solid rgb(17, 139, 253) 2px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .user-information {
