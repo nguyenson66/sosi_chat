@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Gothic&family=Playfair+Display:ital,wght@1,700&family=Smooch+Sans:wght@500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style: none;
+}
+
+body {
+    min-height: 100vh;
+}
+
+/* ////////////// navbar  ////////////////*/
+
+#sideNav {
+    display: flex;
+    background: url(https://i.pinimg.com/originals/82/e0/e2/82e0e2829b9ed27646e50e6dc6b11159.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 0 5px rgb(0, 102, 255);
+    position: fixed;
+    width: 100%;
+}
+
+/* #sideNav .navbar-brand {
+    margin-left: 50px;
+} */
+
+#sideNav .navbar-brand .profile-image {
+    display: none;
+}
+
+#sideNav .navbar-brand .profile-name {
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 0 2px #dc2743, 0 0 5px #dc2743;
+    font-size: 25px;
+}
+
+#sideNav .navbar-collapse .navbar-nav {
+    display: flex;
+}
+
+.navbar-nav {
+    line-height: 2em;
+    margin-top: 20px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 0 5px #ffff66, 0 0 10px #ffff66;
+}
+
+.nav-item a:hover {
+    text-decoration: none;
+    text-shadow: 0 0 5px #0099ff, 0 0 10px #0099ff;
+    color: #fff;
+}
+
+#sideNav .earth-animation {
+    display: none;
+}
+
+/*//////// end navbar //////////*/
+
+section {
+    padding: 50px 30px;
+    border-bottom: 1px solid rgb(167, 167, 167);
+}
+
+section h1 {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 60px;
+}
+
+#about .information i {
+    font-size: 25px;
+    margin-right: 10px;
+}
+
+#about .information .name-infor {
+    margin-top: 50px;
+}
+
+#about .information .name-infor h1 {
+    font-family: league gothic;
+    font-size: 60px;
+    color: #0099ff;
+    text-shadow: 0 0 4px #ffff50, 0 0 8px #ffff50;
+}
+
+#about .information .general-information p {
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.info-inline {
+    display: inline-block;
+}
+
+#about .contact {
+    margin-top: 50px;
+}
+
+#about .contact .icon {
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+    background-color: #808080;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+#about .contact .instagram:hover {
+    background: linear-gradient(
+        45deg,
+        #f09433 0%,
+        #e6683c 25%,
+        #dc2743 50%,
+        #cc2366 75%,
+        #bc1888 100%
+    );
+
+    transition: all 5s ease-in-out;
+}
+
+#about .contact .facebook:hover {
+    background: #0000ff;
+}
+
+#about .contact .github:hover {
+    background: #1a1a1a;
+}
+
+#about .contact .icon a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+#about .contact .icon i {
+    color: #fff;
+    font-size: 35px;
+}
+
+/* education */
+#education .school .course {
+    display: inline-block;
+}
+
+#education .prize {
+    margin-top: 30px;
+}
+
+.prize h5 i {
+    color: #ffff50;
+}
+
+/* #education .school .course h3 {
+    max-width: 70%;
+} */
+
+/* skills */
+#skills h5 {
+    margin-top: 50px;
+}
+
+#skills .box .icon {
+    display: inline-block;
+    margin: 20px;
+}
+
+#skills .box .icon-span {
+    margin-top: 30px;
+}
+
+#skills .box .icon i {
+    font-size: 50px;
+}
+
+/* #skills .box .icon span {
+    margin-top: -20px;
+} */
+
+/* projects */
+
+#projects .box {
+    margin-top: 50px;
+}
+
+#projects .box .project {
+    margin-bottom: 50px;
+}
+
+#projects .box .project .content {
+    padding: 30px 0 0 30px;
+}
+
+#projects .box .project .title {
+    border-bottom: solid 2px yellow;
+    width: fit-content;
+}
+
+#projects .box .project .title i {
+    font-size: 20px;
+    color: green;
+}
+
+#projects .box .project .title h5 {
+    display: inline-block;
+    color: #006eb3;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-left: 17em;
+    }
+
+    #sideNav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        flex-direction: column;
+        width: 17em;
+        min-height: 100vh;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    #sideNav .navbar-brand {
+        position: relative;
+        top: 50px;
+        left: 8px;
+        width: 100%;
+    }
+
+    #sideNav .navbar-brand .profile-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #sideNav .navbar-brand .profile-image img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-position: center;
+        object-fit: cover;
+        box-shadow: 0 0 8px #0099ff, 0 0 16px #0099ff;
+    }
+
+    #sideNav .navbar-brand .profile-name {
+        display: none;
+    }
+
+    .navbar-toggler {
+        display: none;
+    }
+
+    #sideNav .navbar-collapse .navbar-nav {
+        position: relative;
+        margin: 50px 0 10px 0;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+
+    #sideNav .navbar-collapse .navbar-nav .nav-item a {
+        display: block;
+        flex-direction: column;
+        margin: 5px 0;
+        text-align: center;
+        font-weight: 900;
+        letter-spacing: 0.06rem;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    #sideNav .earth-animation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* width: 200px;
+        height: 200px; */
+        position: relative;
+    }
+
+    #sideNav .earth-animation .satellite {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+
+        animation: animate 10s linear infinite;
+    }
+
+    @keyframes animate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    #sideNav .earth-animation .satellite i {
+        /* content: ''; */
+        position: absolute;
+        top: 0;
+        left: 50%;
+        color: #fff;
+        transform: rotate(-35deg);
+        font-size: 20px;
+        text-shadow: 0 0 2px #e6683c, 0 0 8px #e6683c;
+    }
+
+    #sideNav .earth-animation .earth {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background: url(/images/earth.jpg);
+        background-size: cover;
+        border-radius: 50%;
+        box-shadow: inset 0 0 20px #03a9f4, 0 0 120px #03a9f4;
+        animation: animationEarth 15s linear infinite;
+    }
+
+    @keyframes animationEarth {
+        0% {
+            background-position: 0;
+        }
+        100% {
+            background-position: -375px;
+        }
+    }
+
+    #about .information .name-infor {
+        margin-top: 0;
+    }
+}

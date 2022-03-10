@@ -22,6 +22,14 @@ router.get('/j/:id', UserController.checkLogin, HomeController.joinRoom);
 router.get('/introduce', HomeController.introduce);
 router.get(
     '/',
+    (req, res, next) => {
+        const subdomains = req.subdomains;
+        if (subdomains[subdomains.length - 1] === 'cv') {
+            res.sendFile(path.join(__dirname, '../views/cv.html'));
+        } else {
+            next();
+        }
+    },
     UserController.checkLogin,
     UserController.checkCompleteUser,
     HomeController.home
