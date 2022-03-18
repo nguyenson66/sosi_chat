@@ -268,8 +268,10 @@ exports.myProfilePOST = asyncWrapper(async (req, res) => {
 
 ////////////////////////////////// API /////////////////////////////////////////
 
-//[GET] /send-mail-verify
+//[GET] /send-mail-verify?email=
 exports.sendMailVerify = async (req, res) => {
+    const email = req.query.email;
+
     if (email) {
         const user = await User.findOne({ email }).select(
             '_id username isVerified'
