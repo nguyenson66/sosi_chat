@@ -8,6 +8,9 @@ const asyncWrapper = require('../app/Middleware/asyncWrapper');
 const mathProcessing = require('../app/Middleware/mathProcessing');
 
 function socketIO(io) {
+
+    const users = {};
+
     io.on('connection', function (socket) {
         // console.log(socket.id);
 
@@ -18,6 +21,9 @@ function socketIO(io) {
             for (let i = 0; i < list_id.length; i++) {
                 socket.join(list_id[i]);
             }
+
+            ////
+            users[socket.id] = 'online';
         });
 
         socket.on(
@@ -375,7 +381,9 @@ function socketIO(io) {
             });
         });
 
-        socket.on('disconnect', () => {});
+        socket.on('disconnect', () => {
+            delete users[socket.id];
+        });
     });
 
     //////////////////// Event emitter ///////////////////

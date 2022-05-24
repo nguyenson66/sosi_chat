@@ -9,7 +9,6 @@ var btnImage = document.getElementById('btn-image');
 var showListSticker = document.getElementById('showListSticker');
 
 /////////////////////////////////// SOCKET  /////////////////////////////////////////////////////
-////// socket ///////
 
 var typing = false;
 var timeout = undefined;
