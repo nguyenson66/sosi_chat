@@ -65,6 +65,7 @@ exports.joinRoom = asyncWrapper(async (req, res) => {
 exports.chat = asyncWrapper(async (req, res) => {
     const room_id = req.params.id;
     const data_user = req.body.user;
+    console.log(req.body);
 
     const data_room = await Room.findById(room_id);
 
@@ -77,6 +78,7 @@ exports.chat = asyncWrapper(async (req, res) => {
     } else {
         // get list room of user
         let list_room = await Room.find({ list_user: data_user._id });
+        console.log(list_room);
         list_room = await getMessage_Room.getInforRoom(
             list_room,
             data_user._id

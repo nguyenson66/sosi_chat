@@ -158,6 +158,7 @@ exports.loginPOST = asyncWrapper(async (req, res) => {
 //[POST] /register
 exports.registerPOST = asyncWrapper(async (req, res) => {
     let { username, email, password, password2 } = req.body;
+    console.log(req.body);
 
     if (password != password2) {
         res.status(302).render('client/register', {
